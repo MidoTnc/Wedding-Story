@@ -100,7 +100,7 @@
 </head>
 <body class="antialiased min-h-screen pb-28 font-sans selection:bg-wedding-accentLight selection:text-wedding-text relative overflow-x-hidden">
 
-    <!-- 💖 샤랄라 로딩 화면 💖 -->
+    <!-- 💖 샤랄라 로딩 화면 (z-100: 최상위) 💖 -->
     <div id="loading-screen" class="fixed inset-0 z-[100] bg-wedding-bg flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out">
         <div class="relative flex items-center justify-center mb-8">
             <div class="absolute w-28 h-28 bg-wedding-accentLight rounded-full animate-ping opacity-60"></div>
@@ -117,8 +117,11 @@
         </p>
     </div>
 
-    <!-- 삭제 확인 커스텀 모달 -->
-    <div id="confirm-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
+    <!-- 시스템 토스트 메시지 (z-90: 로딩 바로 아래) -->
+    <div id="system-msg" class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-[90] px-6 py-3 rounded-full bg-wedding-accent text-white shadow-lg text-sm font-bold transition-opacity"></div>
+
+    <!-- 삭제 확인 커스텀 모달 (z-80: 설정창 위) -->
+    <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl p-6 md:p-8 w-full max-w-sm shadow-2xl text-center">
             <div class="w-16 h-16 rounded-full bg-red-50 text-wedding-danger flex items-center justify-center mx-auto mb-4 text-3xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
@@ -132,13 +135,13 @@
         </div>
     </div>
 
-    <!-- 설정 버튼 (상단 겹침 방지 및 스크롤 시 안 따라오게 absolute로 변경) -->
+    <!-- 설정 버튼 (z-70: 설정창보다 위에 위치) -->
     <button onclick="window.toggleSettingsModal(true)" class="absolute top-4 right-4 md:top-6 md:right-6 z-[70] bg-white p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center">
         <i class="fa-solid fa-gear text-lg md:text-xl"></i>
     </button>
 
-    <!-- 설정 모달 -->
-    <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <!-- 설정 모달 (z-60) -->
+    <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-lg p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-wedding-border pb-4 mb-6 sticky top-0 bg-white z-10 pt-2">
                 <h2 class="text-2xl font-serif-title font-bold text-wedding-text">플래너 설정</h2>
@@ -256,8 +259,6 @@
             </button>
         </nav>
 
-        <div id="system-msg" class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-full bg-wedding-accent text-white shadow-lg text-sm font-bold transition-opacity"></div>
-
         <!-- 1. 체크리스트 섹션 -->
         <section id="checklist" class="tab-content active">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
@@ -296,7 +297,6 @@
         <section id="budget" class="tab-content">
             <div class="mb-6">
                 <h2 class="text-2xl font-serif-title font-bold mb-1">예산 및 지출 관리</h2>
-                <!-- 설명글 줄바꿈 적용 -->
                 <p class="text-wedding-subtext text-sm">체크리스트 비용 내역이 이곳에 집계됩니다.<br>결제 여부도 관리하세요.</p>
             </div>
 
@@ -318,7 +318,6 @@
             </div>
 
             <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border overflow-hidden">
-                <!-- 테이블 구조를 벗어나 모바일에서 절대 잘리지 않는 카드 리스트 레이아웃 적용 -->
                 <div id="budget-body" class="flex flex-col"></div>
             </div>
         </section>
@@ -402,7 +401,7 @@
         </section>
     </main>
 
-    <!-- 앱 설치 팝업/버튼 -->
+    <!-- 앱 설치 팝업/버튼 (z-50) -->
     <div id="install-container" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-opacity duration-300">
         <button id="install-btn" class="bg-wedding-text text-white px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2 hover:bg-black transition-colors border-2 border-wedding-accentLight cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-mobile-screen-button"></i> 📱 앱 설치하기
@@ -452,7 +451,6 @@
         const defaultCategories = ['상견례', '웨딩홀', '스튜디오', '드레스', '메이크업', '예복/예물', '혼주', '신혼집/가전', '신혼여행', '식전스냅', '본식스냅', '청첩장', '본식/기타'];
         
         const extensiveChecklist = [
-            // 상견례
             { category: '상견례', title: '상견례 예산 범위 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '참석 인원 최종 확인 (형제자매 포함 여부)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '양가 부모님 선호/비선호 음식 및 알러지 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -474,7 +472,6 @@
             { category: '상견례', title: '상견례 당일 식대 선결제 (화장실 가는 척)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '상견례 후 양가 부모님께 안부/감사 연락', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 웨딩홀
             { category: '웨딩홀', title: '양가 예상 하객수 대략적 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '웨딩홀 예산 한도 (대관료+식대) 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '원하는 예식 달 및 시간대 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -496,7 +493,6 @@
             { category: '웨딩홀', title: '본식 2주 전 최종 보증인원 홀 통보', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '식권 수령 및 도장/넘버링 작업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 스튜디오
             { category: '스튜디오', title: '스튜디오/드레스/메이크업 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '인스타그램 등 스튜디오 레퍼런스 수집', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '원하는 스튜디오 느낌 결정 (인물중심 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -518,7 +514,6 @@
             { category: '스튜디오', title: '모바일 청첩장용 선수정본 요청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '최종 앨범 및 대형 액자 수령', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 드레스
             { category: '드레스', title: '드레스 투어용 예산 범위 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '선호하는 드레스 스타일 스크랩', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '드레스 투어 샵 3~4곳 선정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -540,7 +535,6 @@
             { category: '드레스', title: '본식용 웨딩 슈즈 대여/구매', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '본식 전 드레스 최종 핏/사이즈 체크', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 메이크업
             { category: '메이크업', title: '메이크업 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '원하는 메이크업 스타일 캡처', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '원하는 헤어 스타일 캡처', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -562,7 +556,6 @@
             { category: '메이크업', title: '메이크업 잔금 및 얼리스타트 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '혼주 메이크업 장소와 동선 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 예복/예물
             { category: '예복/예물', title: '예복/예물 전체 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '웨딩밴드 브랜드 서칭 (백화점/청담/종로)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '웨딩밴드 투어 리스트업 및 예약', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -584,7 +577,6 @@
             { category: '예복/예물', title: '신부 예물 (가방, 시계 등) 구매', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '프로포즈/답프로포즈 준비', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 혼주
             { category: '혼주', title: '혼주 한복/양복 예산 설정 (누가 부담할지)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '양가 어머니 한복 대여 vs 맞춤 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '한복 샵 포트폴리오 비교 및 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -606,7 +598,6 @@
             { category: '혼주', title: '당일/익일 한복 반납 동선 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '결혼식 후 부모님 감사 인사 및 선물', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 신혼집/가전
             { category: '신혼집/가전', title: '신혼집 마련 총 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '대출 한도 조회 (디딤돌, 보금자리론 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '선호 주거 지역(직주근접 등) 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -628,7 +619,6 @@
             { category: '신혼집/가전', title: '이삿짐 센터 견적, 예약 및 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '전입 신고, 확정 일자 받기', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 신혼여행
             { category: '신혼여행', title: '신혼여행 예산 및 예상 기간 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '여행 스타일(휴양/관광) 양가 조율', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '신혼여행 후보지 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -650,7 +640,6 @@
             { category: '신혼여행', title: '회사/지인용 현지 기념품 구매 리스트 작성', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '인천공항 이동편(콜밴/주차) 예약', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 식전스냅
             { category: '식전스냅', title: '야외/제주 스냅 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '스냅 업체 포트폴리오 비교', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '업체 색감(따뜻함/선명함) 고려', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -672,7 +661,6 @@
             { category: '식전스냅', title: '모바일용 선수정본 우선 요청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '수정본 컨펌 및 액자/앨범 수령', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 본식스냅
             { category: '본식스냅', title: '본식 스냅 및 DVD 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '홀 환경(어두움/밝음)에 맞는 업체 서칭', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '업체 포트폴리오 꼼꼼히 비교', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -694,7 +682,6 @@
             { category: '본식스냅', title: '본식 후 스냅/DVD 잔금 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '원본 수령 후 앨범 사진 셀렉 및 컨펌', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 청첩장
             { category: '청첩장', title: '청첩장 전체 예산 및 필요 장수 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '청첩장 업체 사이트 회원가입', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '무료 청첩장 샘플 10~20종 이상 신청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -716,7 +703,6 @@
             { category: '청첩장', title: '청첩장 모임 그룹 분류 (회사/친구 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '청첩장 모임 장소 예약 및 식사비 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
-            // 본식/기타
             { category: '본식/기타', title: '주례 없는 예식 vs 주례 있는 예식 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식/기타', title: '주례 섭외 및 사례금 준비', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식/기타', title: '결혼식 사회자 섭외 (지인 vs 전문)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -739,7 +725,7 @@
             { category: '본식/기타', title: '결혼식 종료 후 감사 인사 발송', date: '', notes: '', price: 0, isDone: false, isPaid: false }
         ];
 
-        const STORAGE_KEY = 'my_wedding_planner_v20'; // 최종 배포판
+        const STORAGE_KEY = 'my_wedding_planner_v21'; // 최종 배포판 V21
         let appData = {
             settings: { weddingDate: '', fontSize: 16, combineSDM: false, totalBudget: 30000000, categories: [...defaultCategories] },
             checklists: [], budgets: [], halls: [] 
@@ -877,14 +863,11 @@
 
         window.deleteCategory = (cat) => {
             window.showConfirm('카테고리 삭제', `'${cat}' 카테고리를 삭제하시겠습니까?\n\n이 카테고리에 포함된 모든 체크리스트와 예산 내역도 함께 영구적으로 삭제됩니다.`, () => {
-                // 1. 카테고리 이름 목록에서 삭제
                 appData.settings.categories = appData.settings.categories.filter(c => c !== cat);
                 
-                // 2. 해당 카테고리를 가진 모든 체크리스트 및 예산 데이터 통째로 삭제
                 appData.checklists = appData.checklists.filter(c => c.category !== cat);
                 appData.budgets = appData.budgets.filter(b => b.category !== cat);
                 
-                // 3. 즉시 저장 후 화면 전체 동기화(진행률 즉각 갱신)
                 saveData(false);
                 window.renderSettingsModal();
                 window.renderAll();
@@ -1150,7 +1133,6 @@
 
             let totalA = 0;
             
-            // 데스크탑 전용 헤더
             const desktopHeader = document.createElement('div');
             desktopHeader.className = "hidden md:flex items-center px-4 py-3 bg-wedding-bg border-b border-wedding-border text-wedding-subtext text-xs font-bold";
             desktopHeader.innerHTML = `
