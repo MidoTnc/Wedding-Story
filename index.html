@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>우리의 웨딩 플래너</title>
     
-    <!-- App Icons / PWA -->
-<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FCFBF9">
+    <!-- 💖 샤랄라 고급진 아이콘 연결 시작 💖 -->
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FCFBF9">
+    <!-- 💖 샤랄라 고급진 아이콘 연결 끝 💖 -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -88,6 +89,7 @@
         input[type="checkbox"].custom-checkbox:checked { background-color: theme('colors.wedding.accent'); border-color: theme('colors.wedding.accent'); }
         input[type="checkbox"].custom-checkbox:checked::before { transform: scale(1); }
         
+        /* 모바일 테이블 스크롤바 */
         .table-container::-webkit-scrollbar { height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background-color: theme('colors.wedding.border'); border-radius: 4px; }
 
@@ -104,10 +106,8 @@
     <!-- 💖 샤랄라 로딩 화면 💖 -->
     <div id="loading-screen" class="fixed inset-0 z-[100] bg-wedding-bg flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out">
         <div class="relative flex items-center justify-center mb-8">
-            <!-- 퍼지는 파동 효과 -->
             <div class="absolute w-28 h-28 bg-wedding-accentLight rounded-full animate-ping opacity-60"></div>
             <div class="absolute w-20 h-20 bg-wedding-accent/30 rounded-full animate-pulse"></div>
-            <!-- 중앙 아이콘 -->
             <div class="w-16 h-16 bg-wedding-surface rounded-full flex items-center justify-center soft-shadow z-10 relative border border-wedding-border">
                 <i class="fa-solid fa-ring text-3xl text-wedding-accent"></i>
             </div>
@@ -129,14 +129,14 @@
             <h3 class="text-xl font-bold text-wedding-text mb-2" id="confirm-msg">정말 실행하시겠습니까?</h3>
             <p class="text-wedding-subtext text-sm mb-6 whitespace-pre-wrap" id="confirm-desc">삭제한 항목은 다시 복구할 수 없습니다.</p>
             <div class="flex gap-3">
-                <button onclick="closeConfirmModal()" class="flex-1 py-3 rounded-xl font-bold text-wedding-subtext bg-wedding-bg hover:bg-gray-200 transition-colors cursor-pointer">취소</button>
+                <button onclick="window.closeConfirmModal()" class="flex-1 py-3 rounded-xl font-bold text-wedding-subtext bg-wedding-bg hover:bg-gray-200 transition-colors cursor-pointer">취소</button>
                 <button id="confirm-ok-btn" class="flex-1 py-3 rounded-xl font-bold text-white bg-wedding-danger hover:bg-red-500 transition-colors cursor-pointer">확인/삭제</button>
             </div>
         </div>
     </div>
 
     <!-- 설정 버튼 -->
-    <button onclick="toggleSettingsModal(true)" class="fixed top-6 right-6 z-40 bg-white p-3 rounded-full soft-shadow text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer">
+    <button onclick="window.toggleSettingsModal(true)" class="fixed top-6 right-6 z-40 bg-white p-3 rounded-full soft-shadow text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer">
         <i class="fa-solid fa-gear text-xl"></i>
     </button>
 
@@ -146,10 +146,10 @@
             <div class="flex justify-between items-center border-b border-wedding-border pb-4 mb-6 sticky top-0 bg-white z-10 pt-2">
                 <h2 class="text-2xl font-serif-title font-bold text-wedding-text">플래너 설정</h2>
                 <div class="flex items-center gap-3">
-                    <button type="button" onclick="saveSettings()" class="bg-wedding-text text-white px-4 py-2 rounded-lg font-bold hover:bg-black transition-colors text-sm cursor-pointer">
+                    <button type="button" onclick="window.saveSettings()" class="bg-wedding-text text-white px-4 py-2 rounded-lg font-bold hover:bg-black transition-colors text-sm cursor-pointer">
                         저장 및 닫기
                     </button>
-                    <button type="button" onclick="toggleSettingsModal(false)" class="text-wedding-subtext hover:text-wedding-danger text-2xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                    <button type="button" onclick="window.toggleSettingsModal(false)" class="text-wedding-subtext hover:text-wedding-danger text-2xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
 
@@ -164,7 +164,7 @@
                     <div>
                         <label class="block text-sm font-bold text-wedding-accent mb-2">우리의 총 예산 한도</label>
                         <div class="relative">
-                            <input type="text" id="set-total-budget" placeholder="예: 30,000,000" class="w-full p-2.5 pr-10 rounded-lg border border-wedding-border outline-none focus:border-wedding-accent text-right font-gowun font-bold text-lg" oninput="formatCurrencyInput(this)">
+                            <input type="text" id="set-total-budget" placeholder="예: 30,000,000" class="w-full p-2.5 pr-10 rounded-lg border border-wedding-border outline-none focus:border-wedding-accent text-right font-gowun font-bold text-lg" oninput="window.formatCurrencyInput(this)">
                             <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-wedding-subtext font-bold">원</span>
                         </div>
                         <p class="text-[11px] text-wedding-subtext mt-1">예산/지출의 '전체보기' 탭에 반영되어 전체 남은 금액을 계산해 줍니다.</p>
@@ -196,7 +196,7 @@
                 <div class="bg-wedding-bg p-4 rounded-xl border border-wedding-border">
                     <div class="flex gap-2 mb-4">
                         <input type="text" id="set-new-cat" placeholder="새 카테고리 이름" class="flex-1 p-2.5 rounded-lg border border-wedding-border outline-none focus:border-wedding-accent text-sm">
-                        <button type="button" onclick="addCategory()" class="bg-wedding-accent text-white px-4 rounded-lg font-bold text-sm cursor-pointer">추가</button>
+                        <button type="button" onclick="window.addCategory()" class="bg-wedding-accent text-white px-4 rounded-lg font-bold text-sm cursor-pointer">추가</button>
                     </div>
                     <ul id="set-cat-list" class="space-y-2 max-h-48 overflow-y-auto pr-2"></ul>
                 </div>
@@ -215,7 +215,6 @@
         </div>
     </div>
 
-    <!-- 헤더 -->
     <header class="max-w-6xl mx-auto px-5 pt-10 pb-6 text-center">
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 relative z-30">
             <div id="wedding-dday-badge" class="bg-wedding-accent text-white px-6 py-2.5 rounded-full font-serif-title font-bold text-xl shadow-lg border-2 border-wedding-accentLight whitespace-nowrap hidden">
@@ -223,7 +222,7 @@
             </div>
             
             <div class="relative inline-block text-center sm:text-left w-full sm:w-auto">
-                <button type="button" onclick="toggleDdayDropdown()" class="bg-white border-2 border-wedding-accent text-wedding-accent px-5 py-2.5 rounded-full font-bold shadow-md hover:bg-wedding-accentLight transition-colors inline-flex items-center justify-center gap-2 cursor-pointer w-[90%] max-w-[320px] sm:w-auto mx-auto">
+                <button type="button" onclick="window.toggleDdayDropdown()" class="bg-white border-2 border-wedding-accent text-wedding-accent px-5 py-2.5 rounded-full font-bold shadow-md hover:bg-wedding-accentLight transition-colors inline-flex items-center justify-center gap-2 cursor-pointer w-[90%] max-w-[320px] sm:w-auto mx-auto">
                     <i class="fa-solid fa-list-check"></i> 다가오는 할일 <i class="fa-solid fa-caret-down text-sm"></i>
                 </button>
                 <div id="dday-dropdown" class="absolute left-1/2 sm:left-auto sm:right-0 transform -translate-x-1/2 sm:translate-x-0 mt-3 w-[90vw] max-w-[320px] sm:w-80 bg-white rounded-2xl shadow-2xl hidden border border-wedding-border overflow-hidden text-left">
@@ -303,7 +302,7 @@
                 <form id="budget-form" class="grid grid-cols-2 md:flex gap-3">
                     <select id="bg-category" required class="col-span-2 md:w-[15%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm"></select>
                     <input type="text" id="bg-title" required placeholder="수동 추가 항목명" class="col-span-2 md:flex-1 p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm">
-                    <input type="text" id="bg-actual" placeholder="지출액 (원)" class="col-span-1 md:w-[18%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm text-right" oninput="formatCurrencyInput(this)">
+                    <input type="text" id="bg-actual" placeholder="지출액 (원)" class="col-span-1 md:w-[18%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm text-right" oninput="window.formatCurrencyInput(this)">
                     <button type="submit" class="col-span-1 md:w-auto bg-wedding-text hover:bg-black text-white px-5 py-3 rounded-lg font-bold text-sm transition-colors whitespace-nowrap cursor-pointer">수동 추가</button>
                 </form>
             </div>
@@ -399,23 +398,15 @@
         </section>
     </main>
 
-    <script>
-        // 로딩 화면 제어 로직
-        window.addEventListener('load', () => {
-            // 인터넷 환경에 따라 너무 빨리 사라지는 것을 방지하기 위해 최소 1.5초 대기
-            setTimeout(() => {
-                const loader = document.getElementById('loading-screen');
-                if(loader) {
-                    loader.classList.remove('opacity-100');
-                    loader.classList.add('opacity-0');
-                    // CSS transition 시간(1초) 이후에 DOM에서 완전히 숨김
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                    }, 1000);
-                }
-            }, 1500); 
-        });
+    <!-- 앱 설치 팝업/버튼 -->
+    <div id="install-container" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-opacity duration-300">
+        <button id="install-btn" class="bg-wedding-text text-white px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2 hover:bg-black transition-colors border-2 border-wedding-accentLight cursor-pointer">
+            <i class="fa-solid fa-mobile-screen-button"></i> 📱 앱 설치하기
+        </button>
+    </div>
 
+    <script>
+    (() => {
         // ==========================================
         // 커스텀 Confirm 모달 로직 
         // ==========================================
@@ -443,11 +434,12 @@
         });
 
         // ==========================================
-        // 1. 260개 초정밀 기본 템플릿 세팅
+        // 1. 260개 초정밀 기본 템플릿 세팅 
         // ==========================================
         const defaultCategories = ['상견례', '웨딩홀', '스튜디오', '드레스', '메이크업', '예복/예물', '혼주', '신혼집/가전', '신혼여행', '식전스냅', '본식스냅', '청첩장', '본식/기타'];
         
         const extensiveChecklist = [
+            // 상견례
             { category: '상견례', title: '상견례 예산 범위 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '참석 인원 최종 확인 (형제자매 포함 여부)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '양가 부모님 선호/비선호 음식 및 알러지 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -469,6 +461,7 @@
             { category: '상견례', title: '상견례 당일 식대 선결제 (화장실 가는 척)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '상견례 후 양가 부모님께 안부/감사 연락', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 웨딩홀
             { category: '웨딩홀', title: '양가 예상 하객수 대략적 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '웨딩홀 예산 한도 (대관료+식대) 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '원하는 예식 달 및 시간대 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -490,6 +483,7 @@
             { category: '웨딩홀', title: '본식 2주 전 최종 보증인원 홀 통보', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '웨딩홀', title: '식권 수령 및 도장/넘버링 작업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 스튜디오
             { category: '스튜디오', title: '스튜디오/드레스/메이크업 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '인스타그램 등 스튜디오 레퍼런스 수집', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '원하는 스튜디오 느낌 결정 (인물중심 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -511,6 +505,7 @@
             { category: '스튜디오', title: '모바일 청첩장용 선수정본 요청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '스튜디오', title: '최종 앨범 및 대형 액자 수령', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 드레스
             { category: '드레스', title: '드레스 투어용 예산 범위 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '선호하는 드레스 스타일 스크랩', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '드레스 투어 샵 3~4곳 선정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -532,6 +527,7 @@
             { category: '드레스', title: '본식용 웨딩 슈즈 대여/구매', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '드레스', title: '본식 전 드레스 최종 핏/사이즈 체크', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 메이크업
             { category: '메이크업', title: '메이크업 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '원하는 메이크업 스타일 캡처', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '원하는 헤어 스타일 캡처', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -553,6 +549,7 @@
             { category: '메이크업', title: '메이크업 잔금 및 얼리스타트 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '메이크업', title: '혼주 메이크업 장소와 동선 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 예복/예물
             { category: '예복/예물', title: '예복/예물 전체 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '웨딩밴드 브랜드 서칭 (백화점/청담/종로)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '웨딩밴드 투어 리스트업 및 예약', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -574,6 +571,7 @@
             { category: '예복/예물', title: '신부 예물 (가방, 시계 등) 구매', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '예복/예물', title: '프로포즈/답프로포즈 준비', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 혼주
             { category: '혼주', title: '혼주 한복/양복 예산 설정 (누가 부담할지)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '양가 어머니 한복 대여 vs 맞춤 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '한복 샵 포트폴리오 비교 및 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -595,8 +593,9 @@
             { category: '혼주', title: '당일/익일 한복 반납 동선 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '결혼식 후 부모님 감사 인사 및 선물', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 신혼집/가전
             { category: '신혼집/가전', title: '신혼집 마련 총 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
-            { category: '신혼집/가전', title: '디딤돌, 보금자리론 등 대출 한도 조회', date: '', notes: '', price: 0, isDone: false, isPaid: false },
+            { category: '신혼집/가전', title: '대출 한도 조회 (디딤돌, 보금자리론 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '선호 주거 지역(직주근접 등) 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '네이버 부동산/호갱노노 매물 서칭', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '부동산 방문 임장 및 매물 직접 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -616,6 +615,7 @@
             { category: '신혼집/가전', title: '이삿짐 센터 견적, 예약 및 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼집/가전', title: '전입 신고, 확정 일자 받기', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 신혼여행
             { category: '신혼여행', title: '신혼여행 예산 및 예상 기간 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '여행 스타일(휴양/관광) 양가 조율', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '신혼여행 후보지 리스트업', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -637,6 +637,7 @@
             { category: '신혼여행', title: '회사/지인용 현지 기념품 구매 리스트 작성', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '신혼여행', title: '인천공항 이동편(콜밴/주차) 예약', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 식전스냅
             { category: '식전스냅', title: '야외/제주 스냅 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '스냅 업체 포트폴리오 비교', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '업체 색감(따뜻함/선명함) 고려', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -658,6 +659,7 @@
             { category: '식전스냅', title: '모바일용 선수정본 우선 요청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '식전스냅', title: '수정본 컨펌 및 액자/앨범 수령', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 본식스냅
             { category: '본식스냅', title: '본식 스냅 및 DVD 예산 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '홀 환경(어두움/밝음)에 맞는 업체 서칭', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '업체 포트폴리오 꼼꼼히 비교', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -679,6 +681,7 @@
             { category: '본식스냅', title: '본식 후 스냅/DVD 잔금 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식스냅', title: '원본 수령 후 앨범 사진 셀렉 및 컨펌', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 청첩장
             { category: '청첩장', title: '청첩장 전체 예산 및 필요 장수 파악', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '청첩장 업체 사이트 회원가입', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '무료 청첩장 샘플 10~20종 이상 신청', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -700,6 +703,7 @@
             { category: '청첩장', title: '청첩장 모임 그룹 분류 (회사/친구 등)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '청첩장', title: '청첩장 모임 장소 예약 및 식사비 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
 
+            // 본식/기타
             { category: '본식/기타', title: '주례 없는 예식 vs 주례 있는 예식 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식/기타', title: '주례 섭외 및 사례금 준비', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '본식/기타', title: '결혼식 사회자 섭외 (지인 vs 전문)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -722,7 +726,7 @@
             { category: '본식/기타', title: '결혼식 종료 후 감사 인사 발송', date: '', notes: '', price: 0, isDone: false, isPaid: false }
         ];
 
-        const STORAGE_KEY = 'my_wedding_planner_v16';
+        const STORAGE_KEY = 'my_wedding_planner_v18';
         let appData = {
             settings: { weddingDate: '', fontSize: 16, combineSDM: false, totalBudget: 30000000, categories: [...defaultCategories] },
             checklists: [], budgets: [], halls: [] 
@@ -733,7 +737,7 @@
 
         const formatMoney = (num) => new Intl.NumberFormat('ko-KR').format(num || 0) + '원';
         
-        function showMessage(msg) {
+        window.showMessage = (msg) => {
             const sysMsg = document.getElementById('system-msg');
             sysMsg.textContent = msg;
             sysMsg.classList.remove('hidden');
@@ -756,27 +760,26 @@
                 appData.checklists = extensiveChecklist.map((item, i) => ({ ...item, id: 'c_' + Date.now().toString(36) + '_' + i }));
                 saveData(false);
             }
-            applySettingsToUI();
-            renderAll();
+            window.applySettingsToUI();
+            window.renderAll();
         }
 
         function saveData(showNotice = true) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-            if(showNotice) showMessage('내용이 저장되었습니다.');
+            if(showNotice) window.showMessage('내용이 저장되었습니다.');
         }
 
-        function renderAll() {
-            renderSettingsModal();
-            renderCategorySelect();
-            renderBudgetFilters();
-            renderChecklists();
-            renderBudget();
-            renderHalls();
-            updateHeaderDday();
-            updateDropdownDdayList();
+        window.renderAll = () => {
+            window.renderSettingsModal();
+            window.renderCategorySelect();
+            window.renderBudgetFilters();
+            window.renderChecklists();
+            window.renderBudget();
+            window.renderHalls();
+            window.updateHeaderDday();
+            window.updateDropdownDdayList();
         }
 
-        // --- 데이터 백업/내보내기 기능 ---
         window.exportToCSV = () => {
             let csvContent = "\uFEFF"; 
             
@@ -813,30 +816,28 @@
             link.click();
             document.body.removeChild(link);
             
-            showMessage('데이터를 엑셀(CSV) 파일로 다운로드했습니다.');
+            window.showMessage('데이터를 엑셀(CSV) 파일로 다운로드했습니다.');
         };
 
-        // --- 기본 셋팅 복원 기능 ---
         window.restoreDefaultChecklist = () => {
             window.showConfirm('기본 셋팅 복원', '현재 작성하신 체크리스트가 모두 삭제되고 기본 템플릿으로 복구됩니다.\n(예산 수동 추가 및 웨딩홀 기록은 유지됩니다.)\n\n정말 복원하시겠습니까?', () => {
                 appData.checklists = extensiveChecklist.map((item, i) => ({ ...item, id: 'c_' + Date.now().toString(36) + '_' + i }));
                 saveData(false);
-                renderChecklists();
-                updateDropdownDdayList();
-                renderBudget();
-                renderSchedule();
-                showMessage('체크리스트가 기본 셋팅으로 완벽히 복원되었습니다.');
+                window.renderChecklists();
+                window.updateDropdownDdayList();
+                window.renderBudget();
+                window.renderSchedule();
+                window.showMessage('체크리스트가 기본 셋팅으로 완벽히 복원되었습니다.');
             });
         };
 
-        // --- 설정 로직 ---
         window.toggleSettingsModal = (show) => {
             const modal = document.getElementById('settings-modal');
-            if(show) { modal.classList.remove('hidden'); renderSettingsModal(); } 
+            if(show) { modal.classList.remove('hidden'); window.renderSettingsModal(); } 
             else { modal.classList.add('hidden'); }
         }
 
-        function renderSettingsModal() {
+        window.renderSettingsModal = () => {
             document.getElementById('set-wedding-date').value = appData.settings.weddingDate || '';
             document.getElementById('set-total-budget').value = appData.settings.totalBudget ? appData.settings.totalBudget.toLocaleString('ko-KR') : '';
             document.getElementById('set-font-size').value = appData.settings.fontSize;
@@ -847,7 +848,7 @@
             appData.settings.categories.forEach(cat => {
                 const li = document.createElement('li');
                 li.className = "flex justify-between items-center bg-white p-2 rounded border border-wedding-border text-sm";
-                li.innerHTML = `<span>${cat}</span><button type="button" onclick="deleteCategory('${cat}')" class="text-wedding-subtext hover:text-wedding-danger cursor-pointer"><i class="fa-solid fa-xmark"></i></button>`;
+                li.innerHTML = `<span>${cat}</span><button type="button" onclick="window.deleteCategory('${cat}')" class="text-wedding-subtext hover:text-wedding-danger cursor-pointer"><i class="fa-solid fa-xmark"></i></button>`;
                 list.appendChild(li);
             });
         }
@@ -857,13 +858,13 @@
             const val = input.value.trim();
             if(val && !appData.settings.categories.includes(val)) {
                 appData.settings.categories.push(val);
-                input.value = ''; renderSettingsModal();
+                input.value = ''; window.renderSettingsModal();
             }
         }
 
         window.deleteCategory = (cat) => {
             appData.settings.categories = appData.settings.categories.filter(c => c !== cat);
-            renderSettingsModal();
+            window.renderSettingsModal();
         }
 
         window.saveSettings = () => {
@@ -873,12 +874,12 @@
             appData.settings.fontSize = parseInt(document.getElementById('set-font-size').value);
             appData.settings.combineSDM = document.getElementById('set-combine-sdm').checked;
             
-            saveData(true); applySettingsToUI(); renderAll(); toggleSettingsModal(false);
+            saveData(true); window.applySettingsToUI(); window.renderAll(); window.toggleSettingsModal(false);
         }
 
-        function applySettingsToUI() { document.documentElement.style.fontSize = appData.settings.fontSize + 'px'; }
+        window.applySettingsToUI = () => { document.documentElement.style.fontSize = appData.settings.fontSize + 'px'; }
 
-        function renderCategorySelect() {
+        window.renderCategorySelect = () => {
             const clSelect = document.getElementById('cl-category');
             const bgSelect = document.getElementById('bg-category');
             clSelect.innerHTML = '<option value="">카테고리 선택</option>';
@@ -890,7 +891,7 @@
             });
         }
 
-        function renderBudgetFilters() {
+        window.renderBudgetFilters = () => {
             const container = document.getElementById('budget-filters');
             container.innerHTML = '';
             
@@ -898,7 +899,7 @@
             allBtn.type = 'button';
             allBtn.className = `budget-cat-btn px-4 py-2 rounded-full border text-sm font-bold transition-colors whitespace-nowrap cursor-pointer ${currentBudgetCategory === '전체' ? 'active bg-wedding-accent text-white border-wedding-accent' : 'border-wedding-border text-wedding-subtext hover:bg-wedding-muted'}`;
             allBtn.textContent = '전체보기';
-            allBtn.onclick = () => { currentBudgetCategory = '전체'; renderBudgetFilters(); renderBudget(); };
+            allBtn.onclick = () => { currentBudgetCategory = '전체'; window.renderBudgetFilters(); window.renderBudget(); };
             container.appendChild(allBtn);
 
             const sdmCats = ['스튜디오', '드레스', '메이크업'];
@@ -914,13 +915,12 @@
                 btn.type = 'button';
                 btn.className = `budget-cat-btn px-4 py-2 rounded-full border text-sm font-bold transition-colors whitespace-nowrap cursor-pointer ${currentBudgetCategory === cat ? 'active bg-wedding-accent text-white border-wedding-accent' : 'border-wedding-border text-wedding-subtext hover:bg-wedding-muted'}`;
                 btn.textContent = cat;
-                btn.onclick = () => { currentBudgetCategory = cat; renderBudgetFilters(); renderBudget(); };
+                btn.onclick = () => { currentBudgetCategory = cat; window.renderBudgetFilters(); window.renderBudget(); };
                 container.appendChild(btn);
             });
         }
 
-        // --- D-Day 로직 ---
-        function calcDdayString(targetDateStr) {
+        window.calcDdayString = (targetDateStr) => {
             if(!targetDateStr) return '';
             const today = new Date(); today.setHours(0,0,0,0);
             const target = new Date(targetDateStr); target.setHours(0,0,0,0);
@@ -931,20 +931,20 @@
             return `D+${Math.abs(diffDays)}`;
         }
 
-        function updateHeaderDday() {
+        window.updateHeaderDday = () => {
             const badge = document.getElementById('wedding-dday-badge');
             if(appData.settings.weddingDate) {
-                badge.innerHTML = `<i class="fa-solid fa-heart mr-2 text-wedding-accentLight"></i>결혼식 ${calcDdayString(appData.settings.weddingDate)}`;
+                badge.innerHTML = `<i class="fa-solid fa-heart mr-2 text-wedding-accentLight"></i>결혼식 ${window.calcDdayString(appData.settings.weddingDate)}`;
                 badge.classList.remove('hidden');
             } else { badge.classList.add('hidden'); }
         }
 
         window.toggleDdayDropdown = () => {
             document.getElementById('dday-dropdown').classList.toggle('hidden');
-            updateDropdownDdayList();
+            window.updateDropdownDdayList();
         }
 
-        function updateDropdownDdayList() {
+        window.updateDropdownDdayList = () => {
             const list = document.getElementById('dday-list');
             list.innerHTML = '';
             const scheduled = appData.checklists.filter(c => c.date && !c.isDone);
@@ -956,7 +956,7 @@
             const topScheduled = scheduled.slice(0, 10);
             
             topScheduled.forEach(item => {
-                const ddayStr = calcDdayString(item.date);
+                const ddayStr = window.calcDdayString(item.date);
                 const isUrgent = ddayStr.startsWith('D-') && parseInt(ddayStr.split('-')[1]) <= 7;
                 const div = document.createElement('div');
                 div.className = "p-3 hover:bg-wedding-bg transition-colors flex items-center justify-between";
@@ -968,7 +968,6 @@
             });
         }
 
-        // --- 탭 로직 ---
         document.querySelectorAll('#tabs .tab-btn').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('#tabs .tab-btn').forEach(t => {
@@ -994,8 +993,7 @@
             else expandedAccordions.delete(catId);
         };
 
-        // --- 렌더링 로직 ---
-        function renderChecklists() {
+        window.renderChecklists = () => {
             const container = document.getElementById('checklist-accordion');
             container.innerHTML = '';
             
@@ -1054,18 +1052,18 @@
                                 </div>
                                 <p class="font-bold text-sm md:text-base truncate ${item.isDone ? 'line-through text-wedding-subtext' : 'text-wedding-text'}">${item.title}</p>
                                 
-                                <div class="grid grid-cols-2 md:flex gap-2 mt-2 w-full">
-                                    <div class="col-span-1 md:w-[130px] flex items-center bg-wedding-bg rounded-md px-2 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
-                                        <i class="fa-regular fa-calendar text-wedding-accent text-xs md:text-sm mr-2"></i>
-                                        <input type="date" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full" value="${item.date || ''}" onchange="window.updateChecklistField('${item.id}', 'date', this.value)">
+                                <div class="flex flex-wrap md:flex-nowrap gap-2 mt-2 w-full">
+                                    <div class="flex-1 md:flex-none md:w-[160px] flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
+                                        <i class="fa-regular fa-calendar text-wedding-accent text-xs md:text-sm mr-2 flex-shrink-0"></i>
+                                        <input type="date" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" value="${item.date || ''}" onchange="window.updateChecklistField('${item.id}', 'date', this.value)">
                                     </div>
-                                    <div class="col-span-1 md:w-[110px] flex items-center bg-wedding-bg rounded-md px-2 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
-                                        <i class="fa-solid fa-won-sign text-wedding-subtext text-[10px] md:text-xs mr-2"></i>
-                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-text font-bold font-gowun w-full text-right" placeholder="비용 입력" value="${item.price ? item.price.toLocaleString('ko-KR') : ''}" onchange="window.formatChecklistPrice(this, '${item.id}')">
+                                    <div class="flex-1 md:flex-none md:w-[130px] flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
+                                        <i class="fa-solid fa-won-sign text-wedding-subtext text-[10px] md:text-xs mr-2 flex-shrink-0"></i>
+                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-text font-bold font-gowun w-full text-right min-w-0" placeholder="비용 입력" value="${item.price ? item.price.toLocaleString('ko-KR') : ''}" onchange="window.formatChecklistPrice(this, '${item.id}')">
                                     </div>
-                                    <div class="col-span-2 md:flex-1 flex items-center bg-wedding-bg rounded-md px-2 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors min-w-0">
-                                        <i class="fa-solid fa-pen text-wedding-subtext text-[10px] md:text-xs mr-2"></i>
-                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full" placeholder="메모 추가" value="${item.notes || ''}" onchange="window.updateChecklistField('${item.id}', 'notes', this.value)">
+                                    <div class="w-full md:w-auto md:flex-1 flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors min-w-0">
+                                        <i class="fa-solid fa-pen text-wedding-subtext text-[10px] md:text-xs mr-2 flex-shrink-0"></i>
+                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" placeholder="메모 추가" value="${item.notes || ''}" onchange="window.updateChecklistField('${item.id}', 'notes', this.value)">
                                     </div>
                                 </div>
                             </div>
@@ -1077,7 +1075,7 @@
                 `).join('');
 
                 groupDiv.innerHTML = `
-                    <div class="bg-[#FAF9F7] p-4 flex justify-between items-center cursor-pointer select-none" onclick="toggleAccordion(${index})">
+                    <div class="bg-[#FAF9F7] p-4 flex justify-between items-center cursor-pointer select-none" onclick="window.toggleAccordion(${index})">
                         <div class="flex items-center gap-3">
                             <h3 class="font-bold text-lg text-wedding-text">${cat}</h3>
                             <span class="text-xs font-bold bg-wedding-accentLight text-wedding-accent px-3 py-1 rounded-full">${catDone} / ${items.length}</span>
@@ -1090,7 +1088,7 @@
                 `;
                 container.appendChild(groupDiv);
             });
-            renderSchedule();
+            window.renderSchedule();
         }
 
         window.formatChecklistPrice = (input, id) => {
@@ -1100,11 +1098,11 @@
             if(item) {
                 item.price = val === '' ? 0 : parseInt(val, 10);
                 saveData(false);
-                renderBudget(); 
+                window.renderBudget(); 
             }
         };
 
-        function renderBudget() {
+        window.renderBudget = () => {
             const tbody = document.getElementById('budget-body');
             tbody.innerHTML = '';
             
@@ -1187,7 +1185,7 @@
             `;
         }
 
-        function renderHalls() {
+        window.renderHalls = () => {
             const container = document.getElementById('hall-container');
             container.innerHTML = '';
             
@@ -1277,7 +1275,7 @@
             document.getElementById('hall-form-title').textContent = "신규 투어 기록 작성";
         }
 
-        function renderSchedule() {
+        window.renderSchedule = () => {
             const container = document.getElementById('timeline-container');
             container.innerHTML = '';
             
@@ -1305,7 +1303,7 @@
                 div.innerHTML = `
                     <div class="absolute -left-[33px] bg-wedding-accent h-4 w-4 rounded-full border-[3px] border-wedding-bg mt-1"></div>
                     <div class="font-bold text-wedding-text mb-3 text-lg flex items-center gap-2">
-                        ${date} <span class="text-sm text-wedding-accent bg-wedding-accentLight px-2 py-0.5 rounded font-bold">${calcDdayString(date)}</span>
+                        ${date} <span class="text-sm text-wedding-accent bg-wedding-accentLight px-2 py-0.5 rounded font-bold">${window.calcDdayString(date)}</span>
                     </div>
                     ${itemsHtml}
                 `;
@@ -1330,7 +1328,7 @@
                 isDone: false,
                 isPaid: false
             });
-            saveData(); renderChecklists(); e.target.reset(); updateDropdownDdayList();
+            saveData(); window.renderChecklists(); e.target.reset(); window.updateDropdownDdayList();
         });
 
         document.getElementById('budget-form').addEventListener('submit', (e) => {
@@ -1343,7 +1341,7 @@
                 actual: val === '' ? 0 : parseInt(val, 10),
                 isPaid: false
             });
-            saveData(); renderBudget(); e.target.reset();
+            saveData(); window.renderBudget(); e.target.reset();
         });
 
         document.getElementById('hall-form').addEventListener('submit', (e) => {
@@ -1360,16 +1358,16 @@
             } else {
                 appData.halls.push(newObj);
             }
-            window.cancelHallEdit(); saveData(); renderHalls(); 
+            window.cancelHallEdit(); saveData(); window.renderHalls(); 
         });
 
         window.deleteItem = (col, id) => {
             window.showConfirm('정말 삭제하시겠습니까?', () => {
                 appData[col] = appData[col].filter(item => item.id !== id);
                 saveData(false);
-                if(col === 'checklists') { renderChecklists(); updateDropdownDdayList(); renderBudget(); }
-                else if(col === 'budgets') renderBudget();
-                else if(col === 'halls') renderHalls();
+                if(col === 'checklists') { window.renderChecklists(); window.updateDropdownDdayList(); window.renderBudget(); }
+                else if(col === 'budgets') window.renderBudget();
+                else if(col === 'halls') window.renderHalls();
             });
         };
 
@@ -1377,17 +1375,17 @@
             window.showConfirm('예산 내역에서 지우시겠습니까?', () => {
                 if(isFromCL) {
                     const cl = appData.checklists.find(c => c.id === id);
-                    if(cl) { cl.price = 0; cl.isPaid = false; saveData(false); renderBudget(); renderChecklists(); }
+                    if(cl) { cl.price = 0; cl.isPaid = false; saveData(false); window.renderBudget(); window.renderChecklists(); }
                 } else {
                     appData.budgets = appData.budgets.filter(b => b.id !== id);
-                    saveData(false); renderBudget();
+                    saveData(false); window.renderBudget();
                 }
             });
         }
 
         window.toggleChecklist = (id, isDone) => {
             const item = appData.checklists.find(i => i.id === id);
-            if(item) { item.isDone = isDone; saveData(false); renderChecklists(); updateDropdownDdayList(); renderBudget(); }
+            if(item) { item.isDone = isDone; saveData(false); window.renderChecklists(); window.updateDropdownDdayList(); window.renderBudget(); }
         };
 
         window.updateChecklistField = (id, field, value) => {
@@ -1395,69 +1393,23 @@
             if(item) { 
                 item[field] = value; 
                 saveData(false);
-                if(field === 'date') { renderChecklists(); updateDropdownDdayList(); renderSchedule(); }
-                if(field === 'notes') { renderBudget(); }
+                if(field === 'date') { window.renderChecklists(); window.updateDropdownDdayList(); window.renderSchedule(); }
+                if(field === 'notes') { window.renderBudget(); }
             }
         };
 
         window.toggleBudgetPaid = (id, isPaid, isFromCL) => {
             if (isFromCL) {
                 const item = appData.checklists.find(i => i.id === id);
-                if(item) { item.isPaid = isPaid; saveData(false); renderBudget(); }
+                if(item) { item.isPaid = isPaid; saveData(false); window.renderBudget(); }
             } else {
                 const item = appData.budgets.find(i => i.id === id);
-                if(item) { item.isPaid = isPaid; saveData(false); renderBudget(); }
+                if(item) { item.isPaid = isPaid; saveData(false); window.renderBudget(); }
             }
         };
 
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('dday-dropdown');
-            const btn = document.querySelector('[onclick="toggleDdayDropdown()"]');
-            if(dropdown && !dropdown.classList.contains('hidden')) {
-                if(!dropdown.contains(e.target) && !btn.contains(e.target)) {
-                    dropdown.classList.add('hidden');
-                }
-            }
-        });
-
         loadData();
+    })();
     </script>
-
-
-<!-- PWA Install Prompt -->
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt',(e)=>{
-  e.preventDefault();
-  deferredPrompt=e;
-
-  const btn=document.createElement('button');
-  btn.innerText="📱 앱 설치하기";
-  btn.style.position="fixed";
-  btn.style.bottom="20px";
-  btn.style.left="50%";
-  btn.style.transform="translateX(-50%)";
-  btn.style.background="#B89B94";
-  btn.style.color="white";
-  btn.style.border="none";
-  btn.style.padding="12px 20px";
-  btn.style.borderRadius="12px";
-  btn.style.fontWeight="bold";
-  btn.style.boxShadow="0 6px 20px rgba(0,0,0,0.15)";
-  btn.style.zIndex="9999";
-  btn.style.cursor="pointer";
-
-  document.body.appendChild(btn);
-
-  btn.addEventListener("click",async()=>{
-     btn.remove();
-     deferredPrompt.prompt();
-     await deferredPrompt.userChoice;
-     deferredPrompt=null;
-  });
-});
-</script>
-
 </body>
 </html>
