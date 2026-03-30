@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>우리의 웨딩 플래너</title>
     
-    <!-- 💖 샤랄라 고급진 아이콘 연결 시작 💖 -->
-    <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <!-- 💖 단 1개의 무손실 초고화질 SVG 아이콘으로 모든 기기 완벽 대응 💖 -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FCFBF9">
-    <!-- 💖 샤랄라 고급진 아이콘 연결 끝 💖 -->
+    <!-- 💖 아이콘 연결 끝 💖 -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -135,9 +132,9 @@
         </div>
     </div>
 
-    <!-- 설정 버튼 -->
-    <button onclick="window.toggleSettingsModal(true)" class="fixed top-6 right-6 z-40 bg-white p-3 rounded-full soft-shadow text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer">
-        <i class="fa-solid fa-gear text-xl"></i>
+    <!-- 설정 버튼 (상단 겹침 방지 및 z-index 최상위 고정) -->
+    <button onclick="window.toggleSettingsModal(true)" class="fixed top-4 right-4 md:top-6 md:right-6 z-[70] bg-white p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center">
+        <i class="fa-solid fa-gear text-lg md:text-xl"></i>
     </button>
 
     <!-- 설정 모달 -->
@@ -215,7 +212,7 @@
         </div>
     </div>
 
-    <header class="max-w-6xl mx-auto px-5 pt-10 pb-6 text-center">
+    <header class="max-w-6xl mx-auto px-5 pt-20 md:pt-16 pb-6 text-center">
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 relative z-30">
             <div id="wedding-dday-badge" class="bg-wedding-accent text-white px-6 py-2.5 rounded-full font-serif-title font-bold text-xl shadow-lg border-2 border-wedding-accentLight whitespace-nowrap hidden">
                 <i class="fa-solid fa-heart mr-2 text-wedding-accentLight"></i>결혼식 D-Day
@@ -276,11 +273,15 @@
             </div>
             
             <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 md:p-5 mb-8">
-                <form id="checklist-form" class="grid grid-cols-2 md:flex gap-3">
-                    <select id="cl-category" required class="col-span-2 md:w-[22%] p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm"></select>
-                    <input type="text" id="cl-title" required placeholder="추가 항목명 (예: 혼주 메이크업 예약)" class="col-span-2 md:flex-1 p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm">
-                    <input type="date" id="cl-date" class="col-span-1 md:w-[20%] p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm text-wedding-subtext">
-                    <button type="submit" class="col-span-1 md:w-auto bg-wedding-accent hover:bg-wedding-accentDark text-white px-6 py-3 rounded-lg font-bold text-sm transition-colors whitespace-nowrap shadow-sm cursor-pointer">추가</button>
+                <form id="checklist-form" class="flex flex-col gap-3">
+                    <div class="flex flex-col md:flex-row gap-3 w-full">
+                        <select id="cl-category" required class="w-full md:w-[22%] p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm"></select>
+                        <input type="text" id="cl-title" required placeholder="추가 항목명 (예: 혼주 메이크업 예약)" class="flex-1 p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm w-full">
+                    </div>
+                    <div class="flex flex-row gap-3 w-full">
+                        <input type="date" id="cl-date" class="flex-1 md:w-[20%] p-3 rounded-lg border border-wedding-border bg-wedding-bg focus:border-wedding-accent outline-none text-sm text-wedding-subtext min-w-0">
+                        <button type="submit" class="bg-wedding-accent hover:bg-wedding-accentDark text-white px-6 py-3 rounded-lg font-bold text-sm transition-colors whitespace-nowrap shadow-sm cursor-pointer flex-shrink-0">추가</button>
+                    </div>
                 </form>
             </div>
 
@@ -299,23 +300,21 @@
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8" id="summary-cards-container"></div>
 
             <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 mb-6">
-                <form id="budget-form" class="grid grid-cols-2 md:flex gap-3">
-                    <select id="bg-category" required class="col-span-2 md:w-[15%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm"></select>
-                    <input type="text" id="bg-title" required placeholder="수동 추가 항목명" class="col-span-2 md:flex-1 p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm">
-                    <input type="text" id="bg-actual" placeholder="지출액 (원)" class="col-span-1 md:w-[18%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm text-right" oninput="window.formatCurrencyInput(this)">
-                    <button type="submit" class="col-span-1 md:w-auto bg-wedding-text hover:bg-black text-white px-5 py-3 rounded-lg font-bold text-sm transition-colors whitespace-nowrap cursor-pointer">수동 추가</button>
+                <form id="budget-form" class="flex flex-col gap-3">
+                    <div class="flex flex-col md:flex-row gap-3 w-full">
+                        <select id="bg-category" required class="w-full md:w-[15%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm"></select>
+                        <input type="text" id="bg-title" required placeholder="수동 추가 항목명" class="flex-1 p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm w-full">
+                    </div>
+                    <div class="flex flex-row gap-3 w-full">
+                        <input type="text" id="bg-actual" placeholder="지출액 (원)" class="flex-1 md:w-[20%] p-3 rounded-lg border border-wedding-border bg-wedding-bg outline-none text-sm text-right min-w-0" oninput="window.formatCurrencyInput(this)">
+                        <button type="submit" class="bg-wedding-text hover:bg-black text-white px-5 py-3 rounded-lg font-bold text-sm transition-colors whitespace-nowrap cursor-pointer flex-shrink-0">수동 추가</button>
+                    </div>
                 </form>
             </div>
 
             <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border overflow-hidden">
-                <div class="table-container overflow-x-auto pb-2">
-                    <table class="w-full text-left min-w-[600px]">
-                        <thead class="bg-wedding-bg border-b border-wedding-border">
-                            <tr class="text-wedding-subtext text-xs font-bold" id="budget-thead"></tr>
-                        </thead>
-                        <tbody id="budget-body" class="text-sm divide-y divide-wedding-border/50 font-gowun"></tbody>
-                    </table>
-                </div>
+                <!-- 테이블 구조를 벗어나 모바일에서 절대 잘리지 않는 카드 리스트 레이아웃 적용 -->
+                <div id="budget-body" class="flex flex-col"></div>
             </div>
         </section>
 
@@ -336,45 +335,45 @@
                     <div class="bg-[#FAF9F7] p-4 rounded-xl border border-wedding-border">
                         <h4 class="font-bold text-wedding-accent mb-3 text-sm"><i class="fa-solid fa-location-dot mr-1"></i> 기본 및 위치 정보</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">1. 웨딩홀 이름 *</label><input type="text" id="h1" required class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">2. 투어 날짜 / 상담자</label><input type="text" id="h2" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">3. 대중교통 / 셔틀 여부</label><input type="text" id="h3" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">4. 주차 대수 / 시간 / 발렛</label><input type="text" id="h4" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">1. 웨딩홀 이름 *</label><input type="text" id="h1" required class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">2. 투어 날짜 / 상담자</label><input type="text" id="h2" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">3. 대중교통 / 셔틀 여부</label><input type="text" id="h3" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">4. 주차 대수 / 시간 / 발렛</label><input type="text" id="h4" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
                         </div>
                     </div>
                     <div class="bg-[#FAF9F7] p-4 rounded-xl border border-wedding-border">
                         <h4 class="font-bold text-wedding-accent mb-3 text-sm"><i class="fa-solid fa-church mr-1"></i> 홀 및 부대시설</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">5. 희망 예식 일시</label><input type="text" id="h5" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">6. 예식 간격 / 단독홀 여부</label><input type="text" id="h6" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">7. 홀 분위기 / 버진로드</label><input type="text" id="h7" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">8. 신부대기실 / 화장실</label><input type="text" id="h8" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div class="md:col-span-2 lg:col-span-2"><label class="text-[11px] text-wedding-subtext font-bold">9. 혼주대기실 / 탈의실 여부</label><input type="text" id="h9" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">5. 희망 예식 일시</label><input type="text" id="h5" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">6. 예식 간격 / 단독홀 여부</label><input type="text" id="h6" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">7. 홀 분위기 / 버진로드</label><input type="text" id="h7" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">8. 신부대기실 / 화장실</label><input type="text" id="h8" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div class="md:col-span-2 lg:col-span-2"><label class="text-[11px] text-wedding-subtext font-bold">9. 혼주대기실 / 탈의실 여부</label><input type="text" id="h9" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
                         </div>
                     </div>
                     <div class="bg-[#FAF9F7] p-4 rounded-xl border border-wedding-border">
                         <h4 class="font-bold text-wedding-accent mb-3 text-sm"><i class="fa-solid fa-utensils mr-1"></i> 식사 및 연회</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">10. 식사 종류 / 가짓수</label><input type="text" id="h10" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">11. 연회장 수용인원 / 뷰</label><input type="text" id="h11" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">12. 주류, 음료 포함 여부</label><input type="text" id="h12" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">13. 사전 시식 가능 인원수</label><input type="text" id="h13" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">10. 식사 종류 / 가짓수</label><input type="text" id="h10" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">11. 연회장 수용인원 / 뷰</label><input type="text" id="h11" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">12. 주류, 음료 포함 여부</label><input type="text" id="h12" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">13. 사전 시식 가능 인원수</label><input type="text" id="h13" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
                         </div>
                     </div>
                     <div class="bg-[#FAF9F7] p-4 rounded-xl border border-wedding-border">
                         <h4 class="font-bold text-wedding-accent mb-3 text-sm"><i class="fa-solid fa-file-contract mr-1"></i> 견적 및 계약 조건</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">14. 대관료 (꽃/연출 포함가)</label><input type="text" id="h14" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">15. 식대 (대인)</label><input type="text" id="h15" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm text-wedding-danger font-bold"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">16. 식대 (소인)</label><input type="text" id="h16" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">17. 최소 보증 인원</label><input type="text" id="h17" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">18. 당일 계약 혜택</label><input type="text" id="h18" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
-                            <div><label class="text-[11px] text-wedding-subtext font-bold">19. 취소 / 환불 규정</label><input type="text" id="h19" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">14. 대관료 (꽃/연출 포함가)</label><input type="text" id="h14" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">15. 식대 (대인)</label><input type="text" id="h15" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm text-wedding-danger font-bold"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">16. 식대 (소인)</label><input type="text" id="h16" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">17. 최소 보증 인원</label><input type="text" id="h17" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">18. 당일 계약 혜택</label><input type="text" id="h18" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
+                            <div><label class="text-[11px] text-wedding-subtext font-bold">19. 취소 / 환불 규정</label><input type="text" id="h19" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
                         </div>
                     </div>
                     <div class="bg-[#FAF9F7] p-4 rounded-xl border border-wedding-border">
                         <h4 class="font-bold text-wedding-accent mb-3 text-sm"><i class="fa-solid fa-pencil mr-1"></i> 기타 메모</h4>
-                        <div><label class="text-[11px] text-wedding-subtext font-bold">20. 스냅 반입 여부, 총평, 단점 등</label><input type="text" id="h20" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-base md:text-sm"></div>
+                        <div><label class="text-[11px] text-wedding-subtext font-bold">20. 스냅 반입 여부, 총평, 단점 등</label><input type="text" id="h20" class="w-full p-2 rounded-md border border-wedding-border outline-none focus:border-wedding-accent text-sm md:text-sm"></div>
                     </div>
 
                     <button type="submit" id="hall-submit-btn" class="w-full bg-wedding-text hover:bg-black text-white py-4 rounded-xl font-bold text-base transition-colors shadow-md cursor-pointer">
@@ -400,12 +399,21 @@
 
     <!-- 앱 설치 팝업/버튼 -->
     <div id="install-container" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-opacity duration-300">
-        <button id="install-btn" class="bg-wedding-text text-white px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2 hover:bg-black transition-colors border-2 border-wedding-accentLight cursor-pointer">
+        <button id="install-btn" class="bg-wedding-text text-white px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2 hover:bg-black transition-colors border-2 border-wedding-accentLight cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-mobile-screen-button"></i> 📱 앱 설치하기
         </button>
     </div>
 
     <script>
+    // PWA 설치 이벤트는 전역 최상단에서 우선 캐치
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const installContainer = document.getElementById('install-container');
+        if (installContainer) installContainer.classList.remove('hidden');
+    });
+
     (() => {
         // ==========================================
         // 커스텀 Confirm 모달 로직 
@@ -726,7 +734,7 @@
             { category: '본식/기타', title: '결혼식 종료 후 감사 인사 발송', date: '', notes: '', price: 0, isDone: false, isPaid: false }
         ];
 
-        const STORAGE_KEY = 'my_wedding_planner_v18';
+        const STORAGE_KEY = 'my_wedding_planner_v20'; // 최종 배포판
         let appData = {
             settings: { weddingDate: '', fontSize: 16, combineSDM: false, totalBudget: 30000000, categories: [...defaultCategories] },
             checklists: [], budgets: [], halls: [] 
@@ -1040,7 +1048,7 @@
                 
                 let itemsHtml = items.map(item => `
                     <div class="flex items-start justify-between p-3 md:p-4 hover:bg-[#FAF9F7] transition-colors border-b border-wedding-border/50 last:border-0 ${item.isDone ? 'opacity-50' : ''}">
-                        <div class="flex items-start gap-3 md:gap-4 flex-1 w-full">
+                        <div class="flex items-start gap-3 md:gap-4 flex-1 w-full min-w-0">
                             <div class="pt-1">
                                 <button type="button" onclick="window.toggleChecklist('${item.id}', ${!item.isDone})" class="flex-shrink-0 w-6 h-6 border-2 rounded-md flex items-center justify-center transition-colors cursor-pointer z-10 ${item.isDone ? 'bg-wedding-accent border-wedding-accent' : 'bg-white border-wedding-border'}">
                                     <i class="fa-solid fa-check text-white text-[12px]" style="${item.isDone ? '' : 'display:none;'}"></i>
@@ -1050,20 +1058,20 @@
                                 <div class="flex items-center gap-2 mb-0.5">
                                     ${cat === '스드메(통합)' ? `<span class="text-[10px] bg-wedding-muted text-wedding-subtext px-1.5 rounded font-bold">${item.category}</span>` : ''}
                                 </div>
-                                <p class="font-bold text-sm md:text-base truncate ${item.isDone ? 'line-through text-wedding-subtext' : 'text-wedding-text'}">${item.title}</p>
+                                <p class="font-bold text-sm md:text-base break-words ${item.isDone ? 'line-through text-wedding-subtext' : 'text-wedding-text'}">${item.title}</p>
                                 
-                                <div class="flex flex-wrap md:flex-nowrap gap-2 mt-2 w-full">
-                                    <div class="flex-1 md:flex-none md:w-[160px] flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
+                                <div class="flex flex-col md:flex-row gap-2 mt-2 w-full">
+                                    <div class="w-full md:w-[150px] flex items-center bg-wedding-bg rounded-md px-3 py-2 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
                                         <i class="fa-regular fa-calendar text-wedding-accent text-xs md:text-sm mr-2 flex-shrink-0"></i>
-                                        <input type="date" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" value="${item.date || ''}" onchange="window.updateChecklistField('${item.id}', 'date', this.value)">
+                                        <input type="date" class="text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" value="${item.date || ''}" onchange="window.updateChecklistField('${item.id}', 'date', this.value)">
                                     </div>
-                                    <div class="flex-1 md:flex-none md:w-[130px] flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
+                                    <div class="w-full md:w-[140px] flex items-center bg-wedding-bg rounded-md px-3 py-2 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
                                         <i class="fa-solid fa-won-sign text-wedding-subtext text-[10px] md:text-xs mr-2 flex-shrink-0"></i>
-                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-text font-bold font-gowun w-full text-right min-w-0" placeholder="비용 입력" value="${item.price ? item.price.toLocaleString('ko-KR') : ''}" onchange="window.formatChecklistPrice(this, '${item.id}')">
+                                        <input type="text" class="text-sm bg-transparent border-none outline-none text-wedding-text font-bold font-gowun w-full text-right min-w-0" placeholder="비용 입력" value="${item.price ? item.price.toLocaleString('ko-KR') : ''}" onchange="window.formatChecklistPrice(this, '${item.id}')">
                                     </div>
-                                    <div class="w-full md:w-auto md:flex-1 flex items-center bg-wedding-bg rounded-md px-3 py-1.5 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors min-w-0">
+                                    <div class="w-full md:flex-1 flex items-center bg-wedding-bg rounded-md px-3 py-2 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors min-w-0">
                                         <i class="fa-solid fa-pen text-wedding-subtext text-[10px] md:text-xs mr-2 flex-shrink-0"></i>
-                                        <input type="text" class="text-xs md:text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" placeholder="메모 추가" value="${item.notes || ''}" onchange="window.updateChecklistField('${item.id}', 'notes', this.value)">
+                                        <input type="text" class="text-sm bg-transparent border-none outline-none text-wedding-subtext font-gowun w-full min-w-0" placeholder="메모 추가" value="${item.notes || ''}" onchange="window.updateChecklistField('${item.id}', 'notes', this.value)">
                                     </div>
                                 </div>
                             </div>
@@ -1126,29 +1134,44 @@
 
             let totalA = 0;
             
+            // 데스크탑 전용 헤더
+            const desktopHeader = document.createElement('div');
+            desktopHeader.className = "hidden md:flex items-center px-4 py-3 bg-wedding-bg border-b border-wedding-border text-wedding-subtext text-xs font-bold";
+            desktopHeader.innerHTML = `
+                <div class="w-24">분류</div>
+                <div class="flex-1">항목 내역</div>
+                <div class="w-32 text-right pr-4">지출액</div>
+                <div class="w-20 text-center">결제상태</div>
+                <div class="w-16 text-center">삭제</div>
+            `;
+            tbody.appendChild(desktopHeader);
+
             filtered.forEach(item => {
                 totalA += item.actual || 0;
-                const tr = document.createElement('tr');
-                tr.className = `hover:bg-wedding-bg transition-colors ${item.isPaid ? 'opacity-70' : ''}`;
+                const tr = document.createElement('div');
+                tr.className = `p-4 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 hover:bg-wedding-bg transition-colors border-b border-wedding-border/50 last:border-0 ${item.isPaid ? 'opacity-70' : ''}`;
                 
-                const deleteBtnHtml = `<button type="button" onclick="window.deleteBudgetItem('${item.id}', ${item.isFromCL})" class="text-wedding-border hover:text-wedding-danger p-2 cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>`;
+                const deleteBtnHtml = `<button type="button" onclick="window.deleteBudgetItem('${item.id}', ${item.isFromCL})" class="text-wedding-border hover:text-wedding-danger p-2 cursor-pointer flex-shrink-0 w-16 text-center"><i class="fa-solid fa-trash-can"></i></button>`;
+
+                const toggleBtnHtml = item.isFromCL ? 
+                    `<div class="w-20 text-center">${item.isPaid ? `<span class="text-[10px] font-bold text-wedding-safe bg-wedding-safe/10 px-2 py-1 rounded whitespace-nowrap">결제완료</span>` : `<span class="text-[10px] text-wedding-subtext whitespace-nowrap">미결제</span>`}</div>` : 
+                    `<div class="w-20 flex justify-center"><button type="button" onclick="window.toggleBudgetPaid('${item.id}', ${!item.isPaid}, ${item.isFromCL})" class="w-6 h-6 border-2 rounded flex items-center justify-center transition-colors cursor-pointer flex-shrink-0 ${item.isPaid ? 'bg-wedding-accent border-wedding-accent' : 'bg-white border-wedding-border'}"><i class="fa-solid fa-check text-white text-xs" style="${item.isPaid ? '' : 'display:none;'}"></i></button></div>`;
 
                 tr.innerHTML = `
-                    <td class="p-4 whitespace-nowrap"><span class="px-2 py-1 bg-wedding-accentLight text-wedding-accent text-[11px] font-bold rounded block text-center">${item.category}</span></td>
-                    <td class="p-4 font-bold text-wedding-text min-w-[200px] break-words">${item.title}</td>
-                    <td class="p-4 text-right font-bold text-wedding-text font-gowun whitespace-nowrap">${formatMoney(item.actual)}</td>
-                    <td class="p-4 text-center w-20 whitespace-nowrap">
-                        <button type="button" onclick="window.toggleBudgetPaid('${item.id}', ${!item.isPaid}, ${item.isFromCL})" class="w-6 h-6 mx-auto border-2 rounded flex items-center justify-center transition-colors cursor-pointer ${item.isPaid ? 'bg-wedding-accent border-wedding-accent' : 'bg-white border-wedding-border'}">
-                            <i class="fa-solid fa-check text-white text-xs" style="${item.isPaid ? '' : 'display:none;'}"></i>
-                        </button>
-                    </td>
-                    <td class="p-4 text-center w-16 whitespace-nowrap">${deleteBtnHtml}</td>
+                    <div class="flex items-start md:items-center gap-3 w-full md:w-auto md:flex-1 min-w-0">
+                        <div class="w-auto md:w-24 flex-shrink-0"><span class="px-2 py-1 bg-wedding-accentLight text-wedding-accent text-[11px] font-bold rounded block text-center">${item.category}</span></div>
+                        <div class="font-bold text-wedding-text text-sm md:text-base break-words flex-1 leading-snug">${item.title}</div>
+                    </div>
+                    <div class="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto mt-1 md:mt-0 border-t md:border-none border-wedding-border/30 pt-2 md:pt-0">
+                        <div class="font-bold text-wedding-text font-gowun text-base md:text-lg whitespace-nowrap md:w-32 text-left md:text-right flex-1 md:flex-none pl-1 md:pr-4">${formatMoney(item.actual)}</div>
+                        ${toggleBtnHtml}
+                        ${deleteBtnHtml}
+                    </div>
                 `;
                 tbody.appendChild(tr);
             });
 
             const summaryCardsContainer = document.getElementById('summary-cards-container');
-            const thead = document.getElementById('budget-thead');
 
             if(isAll) {
                 const displayPlanned = appData.settings.totalBudget || 0;
@@ -1175,14 +1198,6 @@
                     </div>
                 `;
             }
-
-            thead.innerHTML = `
-                <th class="p-4 w-28 whitespace-nowrap">분류</th>
-                <th class="p-4 min-w-[120px]">항목 내역</th>
-                <th class="p-4 text-right whitespace-nowrap">지출액</th>
-                <th class="p-4 text-center w-20 whitespace-nowrap">결제상태</th>
-                <th class="p-4 text-center w-16 whitespace-nowrap">삭제</th>
-            `;
         }
 
         window.renderHalls = () => {
@@ -1210,8 +1225,8 @@
                             </button>
                         </div>
                     </div>
-                    <div class="p-5 text-sm space-y-3 font-gowun">
-                        <table class="w-full text-left spec-table text-xs md:text-sm">
+                    <div class="p-5 text-sm space-y-3 font-gowun overflow-x-auto">
+                        <table class="w-full text-left spec-table text-xs md:text-sm break-keep">
                             <tbody>
                                 <tr><th class="p-2 border-b border-wedding-border/50">투어일/상담자</th><td class="p-2 border-b border-wedding-border/50">${item.h2 || '-'}</td></tr>
                                 <tr><th class="p-2 border-b border-wedding-border/50">대중교통/셔틀</th><td class="p-2 border-b border-wedding-border/50">${item.h3 || '-'}</td></tr>
@@ -1410,7 +1425,7 @@
 
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('dday-dropdown');
-            const btn = document.querySelector('[onclick="toggleDdayDropdown()"]');
+            const btn = document.querySelector('[onclick="window.toggleDdayDropdown()"]');
             if(dropdown && !dropdown.classList.contains('hidden')) {
                 if(!dropdown.contains(e.target) && !btn.contains(e.target)) {
                     dropdown.classList.add('hidden');
@@ -1426,12 +1441,11 @@
                     loader.classList.add('opacity-0');
                     setTimeout(() => {
                         loader.style.display = 'none';
-                    }, 1000); // 투명해진 후 화면에서 완전히 제거
+                    }, 1000); 
                 }
-            }, 1000); // 1초 뒤에 사라짐 시작
+            }, 1000); 
         }
         
-        // 브라우저가 이미 로딩을 마쳤는지 확인 후 안전하게 실행
         if (document.readyState === 'complete') {
             hideLoader();
         } else {
@@ -1439,7 +1453,6 @@
         }
 
         // --- PWA 앱 설치 및 서비스 워커 로직 ---
-        let deferredPrompt;
         const installContainer = document.getElementById('install-container');
         const installBtn = document.getElementById('install-btn');
 
@@ -1449,7 +1462,6 @@
             });
         }
 
-        // 아이폰 여부 체크
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
         if (isIOS && installContainer && installBtn) {
@@ -1458,12 +1470,6 @@
                 window.showConfirm('앱 설치 안내', '아이폰은 사파리 하단의 [공유하기] 아이콘을 누른 후, [홈 화면에 추가]를 선택하시면 앱으로 설치됩니다! 🍎', () => {});
             });
         } else if (installContainer && installBtn) {
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installContainer.classList.remove('hidden');
-            });
-
             installBtn.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
