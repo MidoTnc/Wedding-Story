@@ -132,8 +132,8 @@
         </div>
     </div>
 
-    <!-- 설정 버튼 (상단 겹침 방지 및 z-index 최상위 고정) -->
-    <button onclick="window.toggleSettingsModal(true)" class="fixed top-4 right-4 md:top-6 md:right-6 z-[70] bg-white p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center">
+    <!-- 설정 버튼 (상단 겹침 방지 및 스크롤 시 안 따라오게 absolute로 변경) -->
+    <button onclick="window.toggleSettingsModal(true)" class="absolute top-4 right-4 md:top-6 md:right-6 z-[70] bg-white p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center">
         <i class="fa-solid fa-gear text-lg md:text-xl"></i>
     </button>
 
@@ -236,19 +236,23 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-4 md:px-8">
-        <!-- 메인 탭 -->
-        <nav class="flex overflow-x-auto justify-start md:justify-center gap-2 md:gap-8 border-b border-wedding-border pb-4 mb-8 hide-scrollbar" id="tabs">
-            <button type="button" class="tab-btn pb-2 border-b-[3px] border-wedding-accent text-wedding-text font-bold transition-all px-2 whitespace-nowrap text-lg cursor-pointer" data-target="checklist">
-                <i class="fa-solid fa-list-check mr-2 text-wedding-accent"></i>체크리스트
+        <!-- 메인 탭 (모바일에서 한눈에 보이도록 크기 축소 및 세로 스택형 적용) -->
+        <nav class="flex w-full justify-between md:justify-center gap-1 md:gap-8 border-b border-wedding-border pb-2 md:pb-4 mb-8" id="tabs">
+            <button type="button" class="tab-btn pb-2 border-b-[3px] border-wedding-accent text-wedding-text font-bold transition-all px-1 md:px-2 text-[11px] sm:text-[13px] md:text-lg cursor-pointer flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2" data-target="checklist">
+                <i class="fa-solid fa-list-check text-wedding-accent text-sm md:text-inherit"></i>
+                <span class="whitespace-nowrap">체크리스트</span>
             </button>
-            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-2 whitespace-nowrap text-lg cursor-pointer" data-target="budget">
-                <i class="fa-solid fa-won-sign mr-2 opacity-50"></i>예산/지출
+            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-1 md:px-2 text-[11px] sm:text-[13px] md:text-lg cursor-pointer flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2" data-target="budget">
+                <i class="fa-solid fa-won-sign opacity-50 text-sm md:text-inherit"></i>
+                <span class="whitespace-nowrap">예산/지출</span>
             </button>
-            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-2 whitespace-nowrap text-lg cursor-pointer" data-target="hall">
-                <i class="fa-solid fa-building mr-2 opacity-50"></i>웨딩홀 비교
+            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-1 md:px-2 text-[11px] sm:text-[13px] md:text-lg cursor-pointer flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2" data-target="hall">
+                <i class="fa-solid fa-building opacity-50 text-sm md:text-inherit"></i>
+                <span class="whitespace-nowrap">웨딩홀 비교</span>
             </button>
-            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-2 whitespace-nowrap text-lg cursor-pointer" data-target="schedule">
-                <i class="fa-regular fa-calendar-days mr-2 opacity-50"></i>일정 뷰
+            <button type="button" class="tab-btn pb-2 border-b-[3px] border-transparent text-wedding-subtext hover:text-wedding-text font-medium transition-all px-1 md:px-2 text-[11px] sm:text-[13px] md:text-lg cursor-pointer flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2" data-target="schedule">
+                <i class="fa-regular fa-calendar-days opacity-50 text-sm md:text-inherit"></i>
+                <span class="whitespace-nowrap">일정 뷰</span>
             </button>
         </nav>
 
@@ -292,7 +296,8 @@
         <section id="budget" class="tab-content">
             <div class="mb-6">
                 <h2 class="text-2xl font-serif-title font-bold mb-1">예산 및 지출 관리</h2>
-                <p class="text-wedding-subtext text-sm">체크리스트 비용 내역이 이곳에 집계됩니다. 결제 여부도 관리하세요.</p>
+                <!-- 설명글 줄바꿈 적용 -->
+                <p class="text-wedding-subtext text-sm">체크리스트 비용 내역이 이곳에 집계됩니다.<br>결제 여부도 관리하세요.</p>
             </div>
 
             <div class="flex flex-wrap gap-2 mb-6" id="budget-filters"></div>
@@ -871,8 +876,19 @@
         }
 
         window.deleteCategory = (cat) => {
-            appData.settings.categories = appData.settings.categories.filter(c => c !== cat);
-            window.renderSettingsModal();
+            window.showConfirm('카테고리 삭제', `'${cat}' 카테고리를 삭제하시겠습니까?\n\n이 카테고리에 포함된 모든 체크리스트와 예산 내역도 함께 영구적으로 삭제됩니다.`, () => {
+                // 1. 카테고리 이름 목록에서 삭제
+                appData.settings.categories = appData.settings.categories.filter(c => c !== cat);
+                
+                // 2. 해당 카테고리를 가진 모든 체크리스트 및 예산 데이터 통째로 삭제
+                appData.checklists = appData.checklists.filter(c => c.category !== cat);
+                appData.budgets = appData.budgets.filter(b => b.category !== cat);
+                
+                // 3. 즉시 저장 후 화면 전체 동기화(진행률 즉각 갱신)
+                saveData(false);
+                window.renderSettingsModal();
+                window.renderAll();
+            });
         }
 
         window.saveSettings = () => {
