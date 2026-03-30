@@ -1408,6 +1408,76 @@
             }
         };
 
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('dday-dropdown');
+            const btn = document.querySelector('[onclick="toggleDdayDropdown()"]');
+            if(dropdown && !dropdown.classList.contains('hidden')) {
+                if(!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        // --- 로딩 화면 숨기기 로직 ---
+        function hideLoader() {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                if(loader) {
+                    loader.classList.add('opacity-0');
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 1000); // 투명해진 후 화면에서 완전히 제거
+                }
+            }, 1000); // 1초 뒤에 사라짐 시작
+        }
+        
+        // 브라우저가 이미 로딩을 마쳤는지 확인 후 안전하게 실행
+        if (document.readyState === 'complete') {
+            hideLoader();
+        } else {
+            window.addEventListener('load', hideLoader);
+        }
+
+        // --- PWA 앱 설치 및 서비스 워커 로직 ---
+        let deferredPrompt;
+        const installContainer = document.getElementById('install-container');
+        const installBtn = document.getElementById('install-btn');
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW 등록 실패: ', err));
+            });
+        }
+
+        // 아이폰 여부 체크
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        if (isIOS && installContainer && installBtn) {
+            installContainer.classList.remove('hidden');
+            installBtn.addEventListener('click', () => {
+                window.showConfirm('앱 설치 안내', '아이폰은 사파리 하단의 [공유하기] 아이콘을 누른 후, [홈 화면에 추가]를 선택하시면 앱으로 설치됩니다! 🍎', () => {});
+            });
+        } else if (installContainer && installBtn) {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installContainer.classList.remove('hidden');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    installContainer.classList.add('hidden');
+                }
+            });
+
+            window.addEventListener('appinstalled', () => {
+                installContainer.classList.add('hidden');
+            });
+        }
+
         loadData();
     })();
     </script>
