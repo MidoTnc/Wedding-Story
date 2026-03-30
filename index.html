@@ -5,20 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>우리의 웨딩 플래너</title>
     
-    <!-- 💖 샤랄라 고급진 아이콘 연결 시작 💖 -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+    <!-- App Icons / PWA -->
 <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
-
-<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-
-<!-- 추가 -->
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-
-    <link rel="manifest" href="site.webmanifest">
-    <meta name="theme-color" content="#FCFBF9">
-    <!-- 💖 샤랄라 고급진 아이콘 연결 끝 💖 -->
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FCFBF9">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -1428,5 +1422,42 @@
 
         loadData();
     </script>
+
+
+<!-- PWA Install Prompt -->
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+
+  const btn=document.createElement('button');
+  btn.innerText="📱 앱 설치하기";
+  btn.style.position="fixed";
+  btn.style.bottom="20px";
+  btn.style.left="50%";
+  btn.style.transform="translateX(-50%)";
+  btn.style.background="#B89B94";
+  btn.style.color="white";
+  btn.style.border="none";
+  btn.style.padding="12px 20px";
+  btn.style.borderRadius="12px";
+  btn.style.fontWeight="bold";
+  btn.style.boxShadow="0 6px 20px rgba(0,0,0,0.15)";
+  btn.style.zIndex="9999";
+  btn.style.cursor="pointer";
+
+  document.body.appendChild(btn);
+
+  btn.addEventListener("click",async()=>{
+     btn.remove();
+     deferredPrompt.prompt();
+     await deferredPrompt.userChoice;
+     deferredPrompt=null;
+  });
+});
+</script>
+
 </body>
 </html>
