@@ -123,12 +123,24 @@
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+
+        /* 인쇄 및 PDF 저장 시 방해 요소 숨기기 위한 최적화 */
+        @media print {
+            .print-hide { display: none !important; }
+            body { background-color: #fff !important; color: #000 !important; }
+            #print-area { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            #budget-body > div { page-break-inside: avoid; }
+            #statistics .grid > div { page-break-inside: avoid; }
+            .bg-wedding-surface { page-break-inside: avoid; }
+            section.tab-content:not(.active) { display: none !important; }
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen pb-28 font-sans selection:bg-wedding-accentLight selection:text-wedding-text relative overflow-x-hidden transition-colors duration-300">
 
     <!-- 💖 로딩 화면 -->
-    <div id="loading-screen" class="fixed inset-0 z-[100] bg-wedding-bg flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out">
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-wedding-bg flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out print-hide">
         <div class="relative flex items-center justify-center mb-8">
             <div class="absolute w-28 h-28 bg-wedding-accentLight rounded-full animate-ping opacity-60"></div>
             <div class="absolute w-20 h-20 bg-wedding-accent/30 rounded-full animate-pulse"></div>
@@ -145,10 +157,10 @@
     </div>
 
     <!-- 토스트 메시지 -->
-    <div id="system-msg" class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-[90] px-6 py-3 rounded-full bg-wedding-accent text-white shadow-lg text-sm font-bold transition-opacity"></div>
+    <div id="system-msg" class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-[90] px-6 py-3 rounded-full bg-wedding-accent text-white shadow-lg text-sm font-bold transition-opacity print-hide"></div>
 
     <!-- 확인 모달 -->
-    <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity">
+    <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity print-hide">
         <div class="bg-wedding-surface rounded-2xl p-6 md:p-8 w-full max-w-sm shadow-2xl text-center border border-wedding-border">
             <div class="w-16 h-16 rounded-full bg-red-500/10 text-wedding-danger flex items-center justify-center mx-auto mb-4 text-3xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
@@ -162,8 +174,8 @@
         </div>
     </div>
 
-    <!-- 우측 상단 플로팅 아이콘 그룹 (PDF, 다크모드, 설정) -->
-    <div class="fixed top-4 right-4 md:top-6 md:right-6 z-[70] flex items-center gap-2 md:gap-3">
+    <!-- 우측 상단 플로팅 아이콘 그룹 (absolute로 변경하여 스크롤 시 상단에 고정/남아있음) -->
+    <div class="absolute top-4 right-4 md:top-6 md:right-6 z-[70] flex items-center gap-2 md:gap-3 print-hide">
         <button onclick="window.downloadPDF()" class="bg-wedding-surface p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center" title="현재 화면 PDF 저장">
             <i class="fa-solid fa-file-pdf text-lg md:text-xl"></i>
         </button>
@@ -176,9 +188,9 @@
     </div>
 
     <!-- 설정 모달 -->
-    <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-wedding-surface rounded-2xl w-full max-w-lg p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] border border-wedding-border">
-            <div class="flex justify-between items-center border-b border-wedding-border pb-4 mb-6 sticky top-0 bg-wedding-surface z-10 pt-2">
+    <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 print-hide">
+        <div class="bg-wedding-surface rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] border border-wedding-border flex flex-col overflow-hidden">
+            <div class="flex justify-between items-center border-b border-wedding-border px-6 md:px-8 py-4 flex-shrink-0 bg-wedding-surface">
                 <h2 class="text-2xl font-serif-title font-bold text-wedding-text">플래너 설정</h2>
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="window.saveSettings()" class="bg-wedding-text text-wedding-surface px-4 py-2 rounded-lg font-bold hover:opacity-80 transition-opacity text-sm cursor-pointer">
@@ -188,6 +200,7 @@
                 </div>
             </div>
 
+            <div class="overflow-y-auto flex-1 px-6 md:px-8 py-6">
             <!-- 기본 설정 -->
             <div class="mb-8">
                 <h3 class="font-bold text-wedding-text mb-4"><i class="fa-solid fa-sliders mr-2 text-wedding-accent"></i>기본 설정</h3>
@@ -206,9 +219,15 @@
                     <div>
                         <label class="block text-sm font-bold text-wedding-subtext mb-2">글자 크기 (화면 전체)</label>
                         <select id="set-font-size" class="w-full p-2.5 rounded-lg border border-wedding-border bg-wedding-surface text-wedding-text outline-none focus:border-wedding-accent">
+                            <option value="12">아주 작게 (12px)</option>
+                            <option value="13">더 작게 (13px)</option>
                             <option value="14">작게 (14px)</option>
+                            <option value="15">약간 작게 (15px)</option>
                             <option value="16">보통 (16px)</option>
+                            <option value="17">약간 크게 (17px)</option>
                             <option value="18">크게 (18px)</option>
+                            <option value="20">아주 크게 (20px)</option>
+                            <option value="22">최대 (22px)</option>
                         </select>
                     </div>
                     <div class="flex items-center justify-between pt-2">
@@ -269,6 +288,18 @@
                 </div>
                 <p class="text-[10px] text-wedding-subtext/70">본 플래너 템플릿은 영리 목적으로 사용할 수 없습니다.</p>
             </div>
+            </div> <!-- /scrollable body -->
+        </div>
+    </div>
+
+    <!-- 웨딩홀 비교 모달 -->
+    <div id="hall-compare-modal" class="fixed inset-0 z-[75] hidden flex items-center justify-center p-4 bg-black/50 backdrop-filter backdrop-blur-sm print-hide">
+        <div class="bg-wedding-surface rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] border border-wedding-border flex flex-col overflow-hidden">
+            <div class="flex justify-between items-center border-b border-wedding-border px-5 py-4 flex-shrink-0 bg-wedding-surface">
+                <h2 class="text-lg font-serif-title font-bold text-wedding-text"><i class="fa-solid fa-scale-balanced mr-2 text-wedding-accent"></i>웨딩홀 비교</h2>
+                <button type="button" onclick="window.closeHallCompare()" class="text-wedding-subtext hover:text-wedding-danger text-2xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="overflow-auto flex-1 p-4" id="hall-compare-body"></div>
         </div>
     </div>
 
@@ -276,11 +307,11 @@
     <div id="print-area">
         <header class="max-w-6xl mx-auto px-5 pt-20 md:pt-16 pb-6 text-center">
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 relative z-30">
-                <div id="wedding-dday-badge" class="bg-wedding-accent text-white px-6 py-2.5 rounded-full font-serif-title font-bold text-xl shadow-lg border-2 border-wedding-accentLight whitespace-nowrap hidden">
+                <div id="wedding-dday-badge" class="bg-wedding-accent text-white px-6 py-2.5 rounded-full font-serif-title font-bold text-xl shadow-lg border-2 border-wedding-accentLight whitespace-nowrap hidden print-hide">
                     <i class="fa-solid fa-heart mr-2 text-wedding-accentLight"></i>결혼식 D-Day
                 </div>
                 
-                <div class="relative inline-block text-center sm:text-left w-full sm:w-auto">
+                <div class="relative inline-block text-center sm:text-left w-full sm:w-auto print-hide">
                     <button type="button" onclick="window.toggleDdayDropdown()" class="bg-wedding-surface border-2 border-wedding-accent text-wedding-accent px-5 py-2.5 rounded-full font-bold shadow-md hover:bg-wedding-accentLight transition-colors inline-flex items-center justify-center gap-2 cursor-pointer w-[90%] max-w-[320px] sm:w-auto mx-auto">
                         <i class="fa-solid fa-list-check"></i> 다가오는 할일 <i class="fa-solid fa-caret-down text-sm"></i>
                     </button>
@@ -298,8 +329,8 @@
         </header>
 
         <main class="max-w-6xl mx-auto px-4 md:px-8">
-            <!-- 메인 탭 (5개 탭 균형 레이아웃) -->
-            <nav class="flex w-full justify-between md:justify-center gap-1 md:gap-4 border-b border-wedding-border pb-2 md:pb-4 mb-8 overflow-x-auto hide-scrollbar" id="tabs">
+            <!-- 메인 탭 -->
+            <nav class="flex w-full justify-between md:justify-center gap-1 md:gap-4 border-b border-wedding-border pb-2 md:pb-4 mb-8 overflow-x-auto hide-scrollbar print-hide" id="tabs">
                 <button type="button" class="tab-btn pb-2 border-b-[3px] border-wedding-accent text-wedding-text font-bold transition-all px-1 md:px-2 text-[10px] sm:text-[12px] md:text-base cursor-pointer flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 min-w-[60px]" data-target="checklist">
                     <i class="fa-solid fa-list-check text-wedding-accent text-[14px] md:text-inherit"></i>
                     <span class="whitespace-nowrap">체크리스트</span>
@@ -328,25 +359,27 @@
                     <div>
                         <div class="flex items-center gap-3 mb-1">
                             <h2 class="text-2xl font-serif-title font-bold text-wedding-text">웨딩 체크리스트</h2>
-                            <button type="button" onclick="window.restoreDefaultChecklist()" class="text-xs bg-wedding-bg border border-wedding-border text-wedding-subtext px-2 py-1.5 rounded-lg hover:bg-wedding-border hover:text-wedding-text transition-colors flex items-center gap-1 cursor-pointer">
+                            <button type="button" onclick="window.restoreDefaultChecklist()" class="text-xs bg-wedding-bg border border-wedding-border text-wedding-subtext px-2 py-1.5 rounded-lg hover:bg-wedding-border hover:text-wedding-text transition-colors flex items-center gap-1 cursor-pointer print-hide">
                                 <i class="fa-solid fa-rotate-right"></i> 기본셋팅 복원
                             </button>
                         </div>
                         <p class="text-wedding-subtext text-sm">항목에 날짜, 비용, 메모를 기입하면 자동으로 연동됩니다.</p>
                     </div>
-                    <div class="w-full md:w-auto bg-wedding-surface p-3 rounded-xl border border-wedding-border flex items-center gap-4 text-sm font-bold shadow-sm">
+                    <div class="w-full md:w-auto bg-wedding-surface p-3 rounded-xl border border-wedding-border flex items-center gap-4 text-sm font-bold shadow-sm print-hide">
                         <div class="text-wedding-subtext">전체 진행률</div>
                         <div class="text-wedding-accent"><span id="cl-count">0/0</span> (<span id="cl-progress">0</span>%)</div>
                     </div>
                 </div>
+                <div class="w-full h-2.5 bg-wedding-border rounded-full mb-4 overflow-hidden print-hide">
+                    <div id="cl-progress-bar" class="h-full bg-wedding-accent rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
 
-                <!-- 실시간 검색바 추가 -->
-                <div class="relative w-full mb-6">
+                <div class="relative w-full mb-6 print-hide">
                     <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-wedding-subtext"></i>
                     <input type="text" id="cl-search-input" class="w-full pl-11 pr-4 py-3 rounded-xl border border-wedding-border bg-wedding-surface text-wedding-text focus:border-wedding-accent outline-none shadow-sm transition-colors" placeholder="체크리스트 항목 검색... (예: 부케, 스튜디오)" oninput="window.renderChecklists()">
                 </div>
                 
-                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 md:p-5 mb-8">
+                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 md:p-5 mb-8 print-hide">
                     <form id="checklist-form" class="flex flex-col gap-3">
                         <div class="flex flex-col md:flex-row gap-3 w-full">
                             <select id="cl-category" required class="w-full md:w-[22%] p-3 rounded-lg border border-wedding-border bg-wedding-bg text-wedding-text focus:border-wedding-accent outline-none text-sm"></select>
@@ -360,6 +393,11 @@
                 </div>
 
                 <div id="checklist-accordion" class="space-y-4"></div>
+                <div class="flex justify-end mt-4 print-hide">
+                    <button type="button" id="toggle-all-acc-btn" onclick="window.toggleAllAccordions()" class="text-xs bg-wedding-bg border border-wedding-border text-wedding-subtext px-3 py-2 rounded-lg hover:bg-wedding-border hover:text-wedding-text transition-colors flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-angles-down"></i> <span>전체 펼치기</span>
+                    </button>
+                </div>
             </section>
 
             <!-- 2. 예산/지출 섹션 -->
@@ -369,11 +407,16 @@
                     <p class="text-wedding-subtext text-sm">체크리스트 비용 내역이 이곳에 집계됩니다.<br>결제 여부도 꼼꼼히 관리하세요.</p>
                 </div>
 
-                <div class="flex flex-wrap gap-2 mb-6" id="budget-filters"></div>
+                <div class="flex flex-wrap gap-2 mb-6 print-hide" id="budget-filters"></div>
+                <div class="flex gap-2 mb-4 print-hide" id="budget-pay-filters">
+                    <button type="button" onclick="window.setPayFilter('전체')" class="pay-filter-btn px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors cursor-pointer bg-wedding-accent text-white border-wedding-accent">전체</button>
+                    <button type="button" onclick="window.setPayFilter('미결제')" class="pay-filter-btn px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors cursor-pointer border-wedding-border text-wedding-subtext bg-wedding-surface hover:bg-wedding-muted">미결제</button>
+                    <button type="button" onclick="window.setPayFilter('결제완료')" class="pay-filter-btn px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors cursor-pointer border-wedding-border text-wedding-subtext bg-wedding-surface hover:bg-wedding-muted">결제완료</button>
+                </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8" id="summary-cards-container"></div>
 
-                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 mb-6">
+                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 mb-6 print-hide">
                     <form id="budget-form" class="flex flex-col gap-3">
                         <div class="flex flex-col md:flex-row gap-3 w-full">
                             <select id="bg-category" required class="w-full md:w-[15%] p-3 rounded-lg border border-wedding-border bg-wedding-bg text-wedding-text outline-none text-sm"></select>
@@ -398,7 +441,7 @@
                     <p class="text-wedding-subtext text-sm">실전 투어 시 꼭 물어봐야 할 20가지 필수 스펙을 모두 기록하세요.</p>
                 </div>
 
-                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 md:p-6 mb-10 relative">
+                <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-4 md:p-6 mb-10 relative print-hide">
                     <div class="flex justify-between items-center border-b border-wedding-border pb-3 mb-5">
                         <h3 class="text-lg font-bold text-wedding-text" id="hall-form-title">신규 투어 기록 작성</h3>
                         <button type="button" id="hall-cancel-edit-btn" onclick="window.cancelHallEdit()" class="hidden text-sm bg-wedding-bg text-wedding-subtext px-3 py-1.5 rounded-lg border border-wedding-border hover:bg-wedding-border transition-colors cursor-pointer">작성 취소</button>
@@ -455,6 +498,14 @@
                     </form>
                 </div>
 
+                <div id="hall-compare-bar" class="hidden mb-4 flex items-center justify-between bg-wedding-accentLight p-3 rounded-xl border border-wedding-accent/30 print-hide">
+                    <span class="text-sm font-bold text-wedding-accent"><i class="fa-solid fa-check-double mr-1"></i> <span id="hall-compare-count">0</span>곳 선택됨</span>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="window.clearHallCompare()" class="text-xs bg-wedding-surface border border-wedding-border text-wedding-subtext px-3 py-1.5 rounded-lg cursor-pointer hover:bg-wedding-border transition-colors">선택 초기화</button>
+                        <button type="button" onclick="window.openHallCompare()" class="text-xs bg-wedding-accent text-white px-4 py-1.5 rounded-lg font-bold cursor-pointer hover:bg-wedding-accentDark transition-colors">나란히 비교</button>
+                    </div>
+                </div>
+
                 <div class="space-y-6" id="hall-container"></div>
             </section>
 
@@ -469,7 +520,7 @@
                 </div>
             </section>
 
-            <!-- 5. 신규 통계 섹션 (업그레이드) -->
+            <!-- 5. 신규 통계 섹션 -->
             <section id="statistics" class="tab-content">
                 <div class="mb-8">
                     <h2 class="text-2xl font-serif-title font-bold mb-1 text-wedding-text">결혼 준비 통계 뷰</h2>
@@ -477,7 +528,7 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- 1. 할일 달성률 (신규 추가) -->
+                    <!-- 1. 할일 달성률 -->
                     <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">전체 체크리스트 달성률</h3>
                         <div class="relative w-full h-56 md:h-72 flex justify-center">
@@ -485,7 +536,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. 예산 사용 현황 (막대) -->
+                    <!-- 2. 예산 사용 현황 -->
                     <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">예산 대비 지출 현황</h3>
                         <div class="relative w-full h-56 md:h-72">
@@ -493,7 +544,7 @@
                         </div>
                     </div>
                     
-                    <!-- 3. 카테고리별 지출 비율 (도넛) -->
+                    <!-- 3. 카테고리별 지출 비율 -->
                     <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center md:col-span-2">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">카테고리별 지출 비율</h3>
                         <div class="relative w-full h-64 md:h-80 flex justify-center">
@@ -505,15 +556,14 @@
         </main>
     </div> <!-- /#print-area -->
 
-    <!-- 앱 설치 팝업/버튼 (z-50) -->
-    <div id="install-container" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-opacity duration-300">
+    <!-- 앱 설치 팝업/버튼 -->
+    <div id="install-container" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-opacity duration-300 print-hide">
         <button id="install-btn" class="bg-wedding-text text-wedding-surface px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2 hover:opacity-80 transition-opacity border-2 border-wedding-accentLight cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-mobile-screen-button"></i> 📱 앱 설치하기
         </button>
     </div>
 
     <script>
-    // PWA 설치 이벤트는 전역 최상단에서 우선 캐치
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -523,9 +573,6 @@
     });
 
     (() => {
-        // ==========================================
-        // 전역 모달 및 다크모드, PDF 등 유틸리티
-        // ==========================================
         let confirmCallback = null;
 
         window.showConfirm = (title, msg, callback) => {
@@ -546,7 +593,7 @@
             window.closeConfirmModal();
         });
 
-        // 🌟 다크 모드 제어 로직
+        // 다크 모드
         window.toggleDarkMode = () => {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
@@ -558,11 +605,9 @@
             const metaTheme = document.getElementById('meta-theme-color');
             if(metaTheme) metaTheme.setAttribute('content', isDark ? '#1c1917' : '#FCFBF9');
 
-            // 테마 변경 시 차트 폰트색/격자색 업데이트를 위해 다시 그리기
             if(window.renderStatistics) window.renderStatistics();
         };
 
-        // 초기 로드 시 다크모드 상태 복구
         if(localStorage.getItem('wedding_dark_mode') === 'true') {
             document.documentElement.classList.add('dark');
             const icon = document.getElementById('dark-mode-icon');
@@ -571,31 +616,53 @@
             if(metaTheme) metaTheme.setAttribute('content', '#1c1917');
         }
 
-        // 🌟 PDF 자동 다운로드 (html2pdf)
+        // PDF 모바일 호환성 강화 로직
         window.downloadPDF = () => {
-            window.showConfirm('PDF 저장', '현재 화면 기준으로 인쇄됩니다.\n체크리스트를 펼쳐주세요.\n\n다운로드를 진행하시겠습니까?', () => {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const activeTab = document.querySelector('.tab-content.active');
+            const activeTabId = activeTab ? activeTab.id : 'checklist';
+            const tabNames = { checklist:'체크리스트', budget:'예산지출', hall:'웨딩홀', schedule:'일정', statistics:'통계' };
+            const useLandscape = ['budget', 'statistics'].includes(activeTabId);
+            
+            const msg = isMobile 
+                ? '스마트폰에서는 메모리 문제 방지를 위해 브라우저에 내장된 [인쇄] 기능을 통해 안전하게 저장합니다.\n\n※ 인쇄 화면이 뜨면 상단에서 "PDF로 저장"을 선택해주세요!\n계속하시겠습니까?' 
+                : `현재 [${tabNames[activeTabId] || activeTabId}] 탭 기준으로 PDF가 저장됩니다.${useLandscape ? '\n(표/차트가 포함되어 가로 모드로 저장됩니다.)' : '\n체크리스트를 원하시는 만큼 펼쳐주세요.'}\n\n다운로드를 진행하시겠습니까?`;
+
+            window.showConfirm('PDF 저장', msg, () => {
                 const element = document.getElementById('print-area');
-                
-                // 검색창 비우고 전체 표시 (PDF 생성시 다 보이도록)
                 const searchInput = document.getElementById('cl-search-input');
                 if(searchInput) { searchInput.value = ''; window.renderChecklists(); }
 
-                const opt = {
-                    margin:       [0.5, 0.2, 0.5, 0.2], // top, left, bottom, right
-                    filename:     `wedding_planner_${new Date().toISOString().slice(0,10)}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, backgroundColor: document.documentElement.classList.contains('dark') ? '#1c1917' : '#FCFBF9' },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-                
-                window.showMessage('PDF 파일을 생성 중입니다. 잠시만 기다려주세요...');
-                html2pdf().set(opt).from(element).save().then(() => {
-                    window.showMessage('PDF 다운로드가 완료되었습니다!');
-                });
+                if (isMobile) {
+                    setTimeout(() => { window.print(); }, 500);
+                } else {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    const opt = {
+                        margin:       useLandscape ? [0.3, 0.3, 0.3, 0.3] : [0.5, 0.2, 0.5, 0.2], 
+                        filename:     `wedding_${activeTabId}_${new Date().toISOString().slice(0,10)}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.95 },
+                        html2canvas:  { 
+                            scale: useLandscape ? 1.5 : 2, 
+                            useCORS: true, 
+                            backgroundColor: isDark ? '#1c1917' : '#FCFBF9',
+                            scrollX: 0,
+                            scrollY: -window.scrollY,
+                            windowWidth: Math.max(document.documentElement.scrollWidth, 1200)
+                        },
+                        jsPDF:        { unit: 'in', format: 'a4', orientation: useLandscape ? 'landscape' : 'portrait' },
+                        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                    };
+                    
+                    window.showMessage('PDF 파일을 생성 중입니다. 잠시만 기다려주세요...');
+                    html2pdf().set(opt).from(element).save().then(() => {
+                        window.showMessage('PDF 다운로드가 완료되었습니다!');
+                    }).catch(e => {
+                        window.showMessage('PDF 생성 중 오류가 발생했습니다.');
+                    });
+                }
             });
         };
 
-        // 🌟 JSON 데이터 백업(Export) 및 복원(Import)
         window.exportDataJSON = () => {
             const dataStr = JSON.stringify(appData, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -631,15 +698,11 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Reset input
+            event.target.value = ''; 
         };
 
-        // ==========================================
-        // 데이터 로직 및 초기화
-        // ==========================================
         const defaultCategories = ['상견례', '웨딩홀', '스튜디오', '드레스', '메이크업', '예복/예물', '혼주', '신혼집/가전', '신혼여행', '식전스냅', '본식스냅', '청첩장', '본식/기타'];
         
-        // 260개 완전 복구 템플릿
         const extensiveChecklist = [
             { category: '상견례', title: '상견례 예산 범위 설정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '상견례', title: '참석 인원 최종 확인 (형제자매 포함 여부)', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -778,7 +841,7 @@
             { category: '혼주', title: '아버지 양복 샵 방문 및 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '아버지 양복 수령 및 핏 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '아버지 넥타이, 벨트, 구두 준비 확인', date: '', notes: '', price: 0, isDone: false, isPaid: false },
-            { category: '양가 부모님', title: '양가 부모님 헤어/메이크업 샵 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
+            { category: '혼주', title: '양가 부모님 헤어/메이크업 샵 결정', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '혼주 메이크업 샵 예약 및 결제', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '혼주 메이크업 시간표 확인 및 안내', date: '', notes: '', price: 0, isDone: false, isPaid: false },
             { category: '혼주', title: '어머니 한복 뒤꽂이, 노리개 등 구매', date: '', notes: '', price: 0, isDone: false, isPaid: false },
@@ -915,14 +978,16 @@
             { category: '본식/기타', title: '결혼식 종료 후 감사 인사 발송', date: '', notes: '', price: 0, isDone: false, isPaid: false }
         ];
 
-        const STORAGE_KEY = 'my_wedding_planner_v_final'; 
+        const STORAGE_KEY = 'my_wedding_planner_v_final_master'; 
         let appData = {
             settings: { weddingDate: '', fontSize: 16, combineSDM: false, totalBudget: 30000000, categories: [...defaultCategories] },
             checklists: [], budgets: [], halls: [] 
         };
         let currentBudgetCategory = '전체';
+        let currentPayFilter = '전체';
         let expandedAccordions = new Set();
         let editingHallId = null;
+        let hallCompareIds = new Set();
 
         let chartProgressInst = null;
         let chartBudgetInst = null;
@@ -1062,7 +1127,7 @@
             const clSelect = document.getElementById('cl-category');
             const bgSelect = document.getElementById('bg-category');
             clSelect.innerHTML = '<option value="">카테고리 선택</option>';
-            bgSelect.innerHTML = '';
+            bgSelect.innerHTML = '<option value="">카테고리 선택</option>';
             appData.settings.categories.forEach(cat => {
                 const opt1 = document.createElement('option'); opt1.value = cat; opt1.textContent = cat;
                 const opt2 = document.createElement('option'); opt2.value = cat; opt2.textContent = cat;
@@ -1098,6 +1163,11 @@
                 container.appendChild(btn);
             });
         }
+
+        window.setPayFilter = (filter) => {
+            currentPayFilter = filter;
+            window.renderBudget();
+        };
 
         window.calcDdayString = (targetDateStr) => {
             if(!targetDateStr) return '';
@@ -1178,6 +1248,21 @@
             else expandedAccordions.delete(catId);
         };
 
+        let allAccExpanded = false;
+        window.toggleAllAccordions = () => {
+            allAccExpanded = !allAccExpanded;
+            document.querySelectorAll('[id^="acc-content-"]').forEach(el => {
+                const idx = parseInt(el.id.replace('acc-content-', ''));
+                const container = document.getElementById(`acc-container-${idx}`);
+                if(allAccExpanded) { el.classList.add('expanded'); if(container) container.classList.add('expanded'); expandedAccordions.add(idx); }
+                else { el.classList.remove('expanded'); if(container) container.classList.remove('expanded'); expandedAccordions.delete(idx); }
+            });
+            const btn = document.getElementById('toggle-all-acc-btn');
+            if(btn) btn.innerHTML = allAccExpanded 
+                ? '<i class="fa-solid fa-angles-up"></i> <span>전체 접기</span>' 
+                : '<i class="fa-solid fa-angles-down"></i> <span>전체 펼치기</span>';
+        };
+
         window.renderChecklists = () => {
             const container = document.getElementById('checklist-accordion');
             container.innerHTML = '';
@@ -1185,7 +1270,10 @@
             const total = appData.checklists.length;
             const done = appData.checklists.filter(c => c.isDone).length;
             document.getElementById('cl-count').textContent = `${done}/${total}`;
-            document.getElementById('cl-progress').textContent = total === 0 ? 0 : Math.round((done/total)*100);
+            const pct = total === 0 ? 0 : Math.round((done/total)*100);
+            document.getElementById('cl-progress').textContent = pct;
+            const bar = document.getElementById('cl-progress-bar');
+            if(bar) bar.style.width = pct + '%';
 
             const sdmCats = ['스튜디오', '드레스', '메이크업'];
             const displayCategories = [];
@@ -1245,7 +1333,7 @@
                                 <div class="flex items-center gap-2 mb-0.5">
                                     ${cat === '스드메(통합)' ? `<span class="text-[10px] bg-wedding-muted text-wedding-subtext px-1.5 rounded font-bold">${item.category}</span>` : ''}
                                 </div>
-                                <p class="font-bold text-sm md:text-base break-words ${item.isDone ? 'line-through text-wedding-subtext' : 'text-wedding-text'}">${item.title}</p>
+                                <p id="title-${item.id}" class="font-bold text-sm md:text-base break-words cursor-pointer hover:bg-wedding-bg/50 rounded px-1 -mx-1 transition-colors ${item.isDone ? 'line-through text-wedding-subtext' : 'text-wedding-text'}" onclick="window.startEditTitle('${item.id}')" title="클릭하여 수정">${item.title}</p>
                                 
                                 <div class="flex flex-col md:flex-row gap-2 mt-2 w-full">
                                     <div class="w-full md:w-[150px] flex items-center bg-wedding-bg rounded-md px-3 py-2 border border-wedding-border/50 focus-within:border-wedding-accent transition-colors flex-shrink-0">
@@ -1325,6 +1413,14 @@
                 }
             }
 
+            if(currentPayFilter === '미결제') filtered = filtered.filter(b => !b.isPaid);
+            else if(currentPayFilter === '결제완료') filtered = filtered.filter(b => b.isPaid);
+
+            document.querySelectorAll('.pay-filter-btn').forEach(btn => {
+                const isActive = btn.textContent.trim() === currentPayFilter;
+                btn.className = `pay-filter-btn px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors cursor-pointer ${isActive ? 'bg-wedding-accent text-white border-wedding-accent' : 'border-wedding-border text-wedding-subtext bg-wedding-surface hover:bg-wedding-muted'}`;
+            });
+
             let totalA = 0;
             
             const desktopHeader = document.createElement('div');
@@ -1343,11 +1439,9 @@
                 const tr = document.createElement('div');
                 tr.className = `p-4 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 hover:bg-wedding-bg transition-colors border-b border-wedding-border/50 last:border-0 ${item.isPaid ? 'opacity-70' : ''}`;
                 
-                const deleteBtnHtml = `<button type="button" onclick="window.deleteBudgetItem('${item.id}', ${item.isFromCL})" class="text-wedding-border hover:text-wedding-danger p-2 cursor-pointer flex-shrink-0 w-16 text-center"><i class="fa-solid fa-trash-can"></i></button>`;
+                const deleteBtnHtml = `<button type="button" onclick="window.deleteBudgetItem('${item.id}', ${!!item.isFromCL})" class="text-wedding-border hover:text-wedding-danger p-2 cursor-pointer flex-shrink-0 w-16 text-center"><i class="fa-solid fa-trash-can"></i></button>`;
 
-                const toggleBtnHtml = item.isFromCL ? 
-                    `<div class="w-20 text-center">${item.isPaid ? `<span class="text-[10px] font-bold text-wedding-safe bg-wedding-safe/10 px-2 py-1 rounded whitespace-nowrap">결제완료</span>` : `<span class="text-[10px] text-wedding-subtext whitespace-nowrap">미결제</span>`}</div>` : 
-                    `<div class="w-20 flex justify-center"><button type="button" onclick="window.toggleBudgetPaid('${item.id}', ${!item.isPaid}, ${item.isFromCL})" class="w-6 h-6 border-2 rounded flex items-center justify-center transition-colors cursor-pointer flex-shrink-0 ${item.isPaid ? 'bg-wedding-accent border-wedding-accent' : 'bg-transparent border-wedding-border'}"><i class="fa-solid fa-check text-white text-xs" style="${item.isPaid ? '' : 'display:none;'}"></i></button></div>`;
+                const toggleBtnHtml = `<div class="w-20 flex justify-center"><button type="button" onclick="window.toggleBudgetPaid('${item.id}', ${!item.isPaid}, ${!!item.isFromCL})" class="w-6 h-6 border-2 rounded flex items-center justify-center transition-colors cursor-pointer flex-shrink-0 ${item.isPaid ? 'bg-wedding-accent border-wedding-accent' : 'bg-transparent border-wedding-border'}"><i class="fa-solid fa-check text-white text-xs" style="${item.isPaid ? '' : 'display:none;'}"></i></button></div>`;
 
                 tr.innerHTML = `
                     <div class="flex items-start md:items-center gap-3 w-full md:w-auto md:flex-1 min-w-0">
@@ -1560,12 +1654,18 @@
             }
 
             appData.halls.forEach(item => {
+                const isSelected = hallCompareIds.has(item.id);
                 const div = document.createElement('div');
-                div.className = "bg-wedding-surface border border-wedding-border rounded-2xl soft-shadow overflow-hidden relative group";
+                div.className = `bg-wedding-surface border rounded-2xl soft-shadow overflow-hidden relative group ${isSelected ? 'border-wedding-accent border-2' : 'border-wedding-border'}`;
                 
                 div.innerHTML = `
                     <div class="bg-wedding-muted p-5 border-b border-wedding-border flex justify-between items-center relative">
-                        <h3 class="text-xl font-bold text-wedding-text truncate pr-24">${item.name}</h3>
+                        <div class="flex items-center gap-3 min-w-0 pr-24">
+                            <button type="button" onclick="window.toggleHallCompare('${item.id}')" class="flex-shrink-0 w-6 h-6 border-2 rounded-md flex items-center justify-center transition-colors cursor-pointer ${isSelected ? 'bg-wedding-accent border-wedding-accent' : 'bg-transparent border-wedding-border'}" title="비교 선택">
+                                <i class="fa-solid fa-check text-white text-[12px]" style="${isSelected ? '' : 'display:none;'}"></i>
+                            </button>
+                            <h3 class="text-xl font-bold text-wedding-text truncate">${item.name}</h3>
+                        </div>
                         <div class="absolute right-4 top-4 flex gap-2 z-10">
                             <button type="button" onclick="window.editHallAction('${item.id}')" class="text-wedding-subtext hover:text-wedding-accent p-2 rounded-full hover:bg-wedding-surface transition-colors cursor-pointer bg-wedding-surface border border-wedding-border shadow-sm" title="수정하기">
                                 <i class="fa-solid fa-pen text-sm"></i>
@@ -1639,6 +1739,51 @@
             document.getElementById('hall-cancel-edit-btn').classList.add('hidden');
             document.getElementById('hall-form-title').textContent = "신규 투어 기록 작성";
         }
+
+        window.toggleHallCompare = (id) => {
+            if(hallCompareIds.has(id)) hallCompareIds.delete(id);
+            else hallCompareIds.add(id);
+            window.renderHalls();
+            window.updateHallCompareBar();
+        };
+        window.clearHallCompare = () => { hallCompareIds.clear(); window.renderHalls(); window.updateHallCompareBar(); };
+        window.updateHallCompareBar = () => {
+            const bar = document.getElementById('hall-compare-bar');
+            const cnt = document.getElementById('hall-compare-count');
+            if(!bar) return;
+            cnt.textContent = hallCompareIds.size;
+            if(hallCompareIds.size >= 2) bar.classList.remove('hidden');
+            else bar.classList.add('hidden');
+        };
+        window.closeHallCompare = () => { document.getElementById('hall-compare-modal').classList.add('hidden'); };
+        window.openHallCompare = () => {
+            const halls = appData.halls.filter(h => hallCompareIds.has(h.id));
+            if(halls.length < 2) { window.showMessage('비교할 웨딩홀을 2곳 이상 선택해주세요.'); return; }
+            const specLabels = [
+                '투어일/상담자','대중교통/셔틀','주차/발렛','희망 예식일시','간격/단독홀',
+                '홀분위기/버진','신부대기실','혼주룸/탈의실','식사 종류/가짓수','연회장 인원/뷰',
+                '음주류 포함여부','시식 가능 인원','대관+연출비','대인 식대','소인 식대',
+                '최소 보증인원','당일 계약 혜택','환불 규정','스냅/총평'
+            ];
+            const specKeys = Array.from({length:19}, (_,i) => 'h'+(i+2));
+            const highlightRows = [3,12,13,15,17];
+
+            let headerCols = halls.map(h => `<th class="p-2 md:p-3 text-center font-bold text-wedding-accent bg-wedding-accentLight border-b border-wedding-border text-xs md:text-sm whitespace-nowrap">${h.name}</th>`).join('');
+            let rows = specLabels.map((label, i) => {
+                const isHL = highlightRows.includes(i);
+                let cells = halls.map(h => `<td class="p-2 md:p-3 border-b border-wedding-border/50 text-center text-xs md:text-sm ${isHL ? 'font-bold bg-wedding-accent/5' : ''}">${h[specKeys[i]] || '-'}</td>`).join('');
+                return `<tr><th class="p-2 md:p-3 border-b border-wedding-border/50 text-left text-xs md:text-sm font-bold text-wedding-text bg-wedding-bg whitespace-nowrap border-r border-wedding-border ${isHL ? 'text-wedding-danger' : ''}">${label}</th>${cells}</tr>`;
+            }).join('');
+
+            document.getElementById('hall-compare-body').innerHTML = `
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
+                        <thead><tr><th class="p-2 md:p-3 bg-wedding-muted border-b border-wedding-border text-xs font-bold text-wedding-subtext border-r border-wedding-border">항목</th>${headerCols}</tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>`;
+            document.getElementById('hall-compare-modal').classList.remove('hidden');
+        };
 
         window.renderSchedule = () => {
             const container = document.getElementById('timeline-container');
@@ -1768,6 +1913,28 @@
             }
         };
 
+        window.startEditTitle = (id) => {
+            const titleEl = document.getElementById('title-' + id);
+            if(!titleEl) return;
+            const item = appData.checklists.find(i => i.id === id);
+            if(!item) return;
+            const input = document.createElement('input');
+            input.type = 'text'; input.value = item.title;
+            input.className = 'font-bold text-sm md:text-base text-wedding-text bg-wedding-bg border border-wedding-accent rounded-md px-2 py-1 outline-none w-full';
+            const save = () => {
+                const v = input.value.trim();
+                if(v && v !== item.title) { item.title = v; saveData(false); }
+                window.renderChecklists(); window.renderBudget();
+            };
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') { e.preventDefault(); save(); }
+                if(e.key === 'Escape') window.renderChecklists();
+            });
+            titleEl.replaceWith(input);
+            input.focus(); input.select();
+        };
+
         window.toggleBudgetPaid = (id, isPaid, isFromCL) => {
             if (isFromCL) {
                 const item = appData.checklists.find(i => i.id === id);
@@ -1781,7 +1948,7 @@
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('dday-dropdown');
             const btn = document.querySelector('[onclick="window.toggleDdayDropdown()"]');
-            if(dropdown && !dropdown.classList.contains('hidden')) {
+            if(dropdown && btn && !dropdown.classList.contains('hidden')) {
                 if(!dropdown.contains(e.target) && !btn.contains(e.target)) {
                     dropdown.classList.add('hidden');
                 }
@@ -1804,7 +1971,7 @@
         const installContainer = document.getElementById('install-container');
         const installBtn = document.getElementById('install-btn');
 
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW 등록 실패: ', err));
             });
