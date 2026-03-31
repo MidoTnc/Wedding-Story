@@ -6,9 +6,8 @@
     <title>우리의 웨딩 플래너</title>
     
     <!-- 아이콘 및 PWA 설정 -->
-    <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="apple-touch-icon" href="icon.svg">
-    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='none' stroke='%23D4B8B1' stroke-width='8'/><circle cx='50' cy='30' r='8' fill='%23D4B8B1'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='none' stroke='%23D4B8B1' stroke-width='8'/><circle cx='50' cy='30' r='8' fill='%23D4B8B1'/></svg>">
     <meta name="theme-color" content="#FCFBF9" id="meta-theme-color">
 
     <!-- 외부 라이브러리: Tailwind, FontAwesome, Chart.js, html2pdf -->
@@ -130,9 +129,6 @@
             body { background-color: #fff !important; color: #000 !important; }
             #print-area { width: 100% !important; margin: 0 !important; padding: 0 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            #budget-body > div { page-break-inside: avoid; }
-            #statistics .grid > div { page-break-inside: avoid; }
-            .bg-wedding-surface { page-break-inside: avoid; }
             section.tab-content:not(.active) { display: none !important; }
         }
     </style>
@@ -529,7 +525,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- 1. 할일 달성률 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center" style="page-break-inside: avoid;">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">전체 체크리스트 달성률</h3>
                         <div class="relative w-full h-56 md:h-72 flex justify-center">
                             <canvas id="chart-progress"></canvas>
@@ -537,7 +533,7 @@
                     </div>
 
                     <!-- 2. 예산 사용 현황 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center" style="page-break-inside: avoid;">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">예산 대비 지출 현황</h3>
                         <div class="relative w-full h-56 md:h-72">
                             <canvas id="chart-budget"></canvas>
@@ -545,7 +541,7 @@
                     </div>
                     
                     <!-- 3. 카테고리별 지출 비율 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center md:col-span-2">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center md:col-span-2" style="page-break-inside: avoid;">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">카테고리별 지출 비율</h3>
                         <div class="relative w-full h-64 md:h-80 flex justify-center">
                             <canvas id="chart-category"></canvas>
@@ -619,14 +615,10 @@
         // PDF 모바일 호환성 강화 로직
         window.downloadPDF = () => {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const activeTab = document.querySelector('.tab-content.active');
-            const activeTabId = activeTab ? activeTab.id : 'checklist';
-            const tabNames = { checklist:'체크리스트', budget:'예산지출', hall:'웨딩홀', schedule:'일정', statistics:'통계' };
-            const useLandscape = ['budget', 'statistics'].includes(activeTabId);
             
             const msg = isMobile 
                 ? '스마트폰에서는 메모리 문제 방지를 위해 브라우저에 내장된 [인쇄] 기능을 통해 안전하게 저장합니다.\n\n※ 인쇄 화면이 뜨면 상단에서 "PDF로 저장"을 선택해주세요!\n계속하시겠습니까?' 
-                : `현재 [${tabNames[activeTabId] || activeTabId}] 탭 기준으로 PDF가 저장됩니다.${useLandscape ? '\n(표/차트가 포함되어 가로 모드로 저장됩니다.)' : '\n체크리스트를 원하시는 만큼 펼쳐주세요.'}\n\n다운로드를 진행하시겠습니까?`;
+                : '현재 보고 계신 탭이 세로 A4 PDF로 저장됩니다.\n체크리스트는 미리 펼쳐주세요.\n\n다운로드를 진행하시겠습니까?';
 
             window.showConfirm('PDF 저장', msg, () => {
                 const element = document.getElementById('print-area');
@@ -636,27 +628,46 @@
                 if (isMobile) {
                     setTimeout(() => { window.print(); }, 500);
                 } else {
+                    // 캡처 전: PDF에 안 들어갈 요소들 확실히 숨기기
+                    const hideIds = ['loading-screen', 'system-msg', 'confirm-modal', 'settings-modal', 'hall-compare-modal', 'install-container'];
+                    hideIds.forEach(id => { const el = document.getElementById(id); if(el) el.style.setProperty('display', 'none', 'important'); });
+                    document.querySelectorAll('.print-hide').forEach(el => el.style.setProperty('display', 'none', 'important'));
+
+                    window.scrollTo(0, 0);
+
+                    const restore = () => {
+                        hideIds.forEach(id => { const el = document.getElementById(id); if(el) el.style.removeProperty('display'); });
+                        document.querySelectorAll('.print-hide').forEach(el => el.style.removeProperty('display'));
+                    };
+
+                    if(typeof html2pdf === 'undefined') {
+                        restore();
+                        window.showMessage('PDF 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
+                        return;
+                    }
+
                     const isDark = document.documentElement.classList.contains('dark');
                     const opt = {
-                        margin:       useLandscape ? [0.3, 0.3, 0.3, 0.3] : [0.5, 0.2, 0.5, 0.2], 
-                        filename:     `wedding_${activeTabId}_${new Date().toISOString().slice(0,10)}.pdf`,
-                        image:        { type: 'jpeg', quality: 0.95 },
+                        margin:       [10, 8, 10, 8],
+                        filename:     `wedding_planner_${new Date().toISOString().slice(0,10)}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.92 },
                         html2canvas:  { 
-                            scale: useLandscape ? 1.5 : 2, 
+                            scale: 2, 
                             useCORS: true, 
                             backgroundColor: isDark ? '#1c1917' : '#FCFBF9',
                             scrollX: 0,
-                            scrollY: -window.scrollY,
-                            windowWidth: Math.max(document.documentElement.scrollWidth, 1200)
+                            scrollY: 0
                         },
-                        jsPDF:        { unit: 'in', format: 'a4', orientation: useLandscape ? 'landscape' : 'portrait' },
-                        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                        pagebreak:    { mode: ['css', 'legacy'] }
                     };
                     
                     window.showMessage('PDF 파일을 생성 중입니다. 잠시만 기다려주세요...');
                     html2pdf().set(opt).from(element).save().then(() => {
+                        restore();
                         window.showMessage('PDF 다운로드가 완료되었습니다!');
                     }).catch(e => {
+                        restore();
                         window.showMessage('PDF 생성 중 오류가 발생했습니다.');
                     });
                 }
@@ -1970,6 +1981,13 @@
 
         const installContainer = document.getElementById('install-container');
         const installBtn = document.getElementById('install-btn');
+
+        if (window.location.protocol.startsWith('http')) {
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = 'manifest.json';
+            document.head.appendChild(manifestLink);
+        }
 
         if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
             window.addEventListener('load', () => {
