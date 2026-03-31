@@ -10,12 +10,12 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='none' stroke='%23D4B8B1' stroke-width='8'/><circle cx='50' cy='30' r='8' fill='%23D4B8B1'/></svg>">
     <meta name="theme-color" content="#FCFBF9" id="meta-theme-color">
 
-    <!-- 외부 라이브러리: Tailwind, FontAwesome, Chart.js, html2pdf -->
+    <!-- 외부 라이브러리: Tailwind, FontAwesome, Chart.js -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Gowun+Dodum&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- html2pdf 제거됨 -->
 
     <!-- Tailwind 커스텀 색상을 CSS 변수로 제어 (다크모드 지원) -->
     <script>
@@ -129,7 +129,6 @@
             body { background-color: #fff !important; color: #000 !important; }
             #print-area { width: 100% !important; margin: 0 !important; padding: 0 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            section.tab-content:not(.active) { display: none !important; }
         }
     </style>
 </head>
@@ -172,9 +171,6 @@
 
     <!-- 우측 상단 플로팅 아이콘 그룹 (absolute로 변경하여 스크롤 시 상단에 고정/남아있음) -->
     <div class="absolute top-4 right-4 md:top-6 md:right-6 z-[70] flex items-center gap-2 md:gap-3 print-hide">
-        <button onclick="window.downloadPDF()" class="bg-wedding-surface p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center" title="현재 화면 PDF 저장">
-            <i class="fa-solid fa-file-pdf text-lg md:text-xl"></i>
-        </button>
         <button onclick="window.toggleDarkMode()" class="bg-wedding-surface p-2.5 md:p-3 rounded-full shadow-md border border-wedding-border/50 text-wedding-subtext hover:text-wedding-accent transition-colors cursor-pointer flex items-center justify-center" title="다크 모드 전환">
             <i class="fa-solid fa-moon text-lg md:text-xl" id="dark-mode-icon"></i>
         </button>
@@ -185,8 +181,8 @@
 
     <!-- 설정 모달 -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 print-hide">
-        <div class="bg-wedding-surface rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] border border-wedding-border flex flex-col overflow-hidden">
-            <div class="flex justify-between items-center border-b border-wedding-border px-6 md:px-8 py-4 flex-shrink-0 bg-wedding-surface">
+        <div class="bg-wedding-surface rounded-2xl w-full max-w-lg p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] border border-wedding-border">
+            <div class="flex justify-between items-center border-b border-wedding-border pb-4 mb-6 sticky top-0 bg-wedding-surface z-10 pt-2">
                 <h2 class="text-2xl font-serif-title font-bold text-wedding-text">플래너 설정</h2>
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="window.saveSettings()" class="bg-wedding-text text-wedding-surface px-4 py-2 rounded-lg font-bold hover:opacity-80 transition-opacity text-sm cursor-pointer">
@@ -196,7 +192,6 @@
                 </div>
             </div>
 
-            <div class="overflow-y-auto flex-1 px-6 md:px-8 py-6">
             <!-- 기본 설정 -->
             <div class="mb-8">
                 <h3 class="font-bold text-wedding-text mb-4"><i class="fa-solid fa-sliders mr-2 text-wedding-accent"></i>기본 설정</h3>
@@ -284,7 +279,6 @@
                 </div>
                 <p class="text-[10px] text-wedding-subtext/70">본 플래너 템플릿은 영리 목적으로 사용할 수 없습니다.</p>
             </div>
-            </div> <!-- /scrollable body -->
         </div>
     </div>
 
@@ -525,7 +519,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- 1. 할일 달성률 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center" style="page-break-inside: avoid;">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">전체 체크리스트 달성률</h3>
                         <div class="relative w-full h-56 md:h-72 flex justify-center">
                             <canvas id="chart-progress"></canvas>
@@ -533,7 +527,7 @@
                     </div>
 
                     <!-- 2. 예산 사용 현황 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center" style="page-break-inside: avoid;">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">예산 대비 지출 현황</h3>
                         <div class="relative w-full h-56 md:h-72">
                             <canvas id="chart-budget"></canvas>
@@ -541,7 +535,7 @@
                     </div>
                     
                     <!-- 3. 카테고리별 지출 비율 -->
-                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center md:col-span-2" style="page-break-inside: avoid;">
+                    <div class="bg-wedding-surface rounded-2xl soft-shadow border border-wedding-border p-5 lg:p-8 flex flex-col justify-center md:col-span-2">
                         <h3 class="font-bold text-lg text-wedding-text mb-6 text-center">카테고리별 지출 비율</h3>
                         <div class="relative w-full h-64 md:h-80 flex justify-center">
                             <canvas id="chart-category"></canvas>
@@ -611,40 +605,6 @@
             const metaTheme = document.getElementById('meta-theme-color');
             if(metaTheme) metaTheme.setAttribute('content', '#1c1917');
         }
-
-        // PDF 모바일 호환성 강화 로직
-        window.downloadPDF = () => {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
-            const msg = isMobile 
-                ? '스마트폰에서는 메모리 문제 방지를 위해 브라우저에 내장된 [인쇄] 기능을 통해 안전하게 저장합니다.\n\n※ 인쇄 화면이 뜨면 상단에서 "PDF로 저장"을 선택해주세요!\n계속하시겠습니까?' 
-                : '현재 보고 계신 탭이 PDF로 저장됩니다.\n체크리스트는 미리 펼쳐주세요.\n\n다운로드를 진행하시겠습니까?';
-
-            window.showConfirm('PDF 저장', msg, () => {
-                const element = document.getElementById('print-area');
-                const searchInput = document.getElementById('cl-search-input');
-                if(searchInput) { searchInput.value = ''; window.renderChecklists(); }
-
-                if (isMobile) {
-                    setTimeout(() => { window.print(); }, 500);
-                } else {
-                    const opt = {
-                        margin:       [0.5, 0.2, 0.5, 0.2], 
-                        filename:     `wedding_planner_${new Date().toISOString().slice(0,10)}.pdf`,
-                        image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2, useCORS: true, backgroundColor: document.documentElement.classList.contains('dark') ? '#1c1917' : '#FCFBF9' },
-                        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                    };
-                    
-                    window.showMessage('PDF 파일을 생성 중입니다. 잠시만 기다려주세요...');
-                    html2pdf().set(opt).from(element).save().then(() => {
-                        window.showMessage('PDF 다운로드가 완료되었습니다!');
-                    }).catch(e => {
-                        window.showMessage('PDF 생성 중 오류가 발생했습니다.');
-                    });
-                }
-            });
-        };
 
         window.exportDataJSON = () => {
             const dataStr = JSON.stringify(appData, null, 2);
@@ -1742,29 +1702,16 @@
         window.openHallCompare = () => {
             const halls = appData.halls.filter(h => hallCompareIds.has(h.id));
             if(halls.length < 2) { window.showMessage('비교할 웨딩홀을 2곳 이상 선택해주세요.'); return; }
-            const specLabels = [
-                '투어일/상담자','대중교통/셔틀','주차/발렛','희망 예식일시','간격/단독홀',
-                '홀분위기/버진','신부대기실','혼주룸/탈의실','식사 종류/가짓수','연회장 인원/뷰',
-                '음주류 포함여부','시식 가능 인원','대관+연출비','대인 식대','소인 식대',
-                '최소 보증인원','당일 계약 혜택','환불 규정','스냅/총평'
-            ];
+            const specLabels = ['투어일/상담자','대중교통/셔틀','주차/발렛','희망 예식일시','간격/단독홀','홀분위기/버진','신부대기실','혼주룸/탈의실','식사 종류/가짓수','연회장 인원/뷰','음주류 포함여부','시식 가능 인원','대관+연출비','대인 식대','소인 식대','최소 보증인원','당일 계약 혜택','환불 규정','스냅/총평'];
             const specKeys = Array.from({length:19}, (_,i) => 'h'+(i+2));
             const highlightRows = [3,12,13,15,17];
-
             let headerCols = halls.map(h => `<th class="p-2 md:p-3 text-center font-bold text-wedding-accent bg-wedding-accentLight border-b border-wedding-border text-xs md:text-sm whitespace-nowrap">${h.name}</th>`).join('');
             let rows = specLabels.map((label, i) => {
                 const isHL = highlightRows.includes(i);
                 let cells = halls.map(h => `<td class="p-2 md:p-3 border-b border-wedding-border/50 text-center text-xs md:text-sm ${isHL ? 'font-bold bg-wedding-accent/5' : ''}">${h[specKeys[i]] || '-'}</td>`).join('');
                 return `<tr><th class="p-2 md:p-3 border-b border-wedding-border/50 text-left text-xs md:text-sm font-bold text-wedding-text bg-wedding-bg whitespace-nowrap border-r border-wedding-border ${isHL ? 'text-wedding-danger' : ''}">${label}</th>${cells}</tr>`;
             }).join('');
-
-            document.getElementById('hall-compare-body').innerHTML = `
-                <div class="table-container overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[500px]">
-                        <thead><tr><th class="p-2 md:p-3 bg-wedding-muted border-b border-wedding-border text-xs font-bold text-wedding-subtext border-r border-wedding-border">항목</th>${headerCols}</tr></thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                </div>`;
+            document.getElementById('hall-compare-body').innerHTML = `<div class="table-container overflow-x-auto"><table class="w-full text-left border-collapse min-w-[500px]"><thead><tr><th class="p-2 md:p-3 bg-wedding-muted border-b border-wedding-border text-xs font-bold text-wedding-subtext border-r border-wedding-border">항목</th>${headerCols}</tr></thead><tbody>${rows}</tbody></table></div>`;
             document.getElementById('hall-compare-modal').classList.remove('hidden');
         };
 
@@ -1885,17 +1832,6 @@
             if(item) { item.isDone = isDone; saveData(false); window.renderChecklists(); window.updateDropdownDdayList(); window.renderBudget(); if(window.renderStatistics) window.renderStatistics(); }
         };
 
-        window.updateChecklistField = (id, field, value) => {
-            const item = appData.checklists.find(i => i.id === id);
-            if(item) { 
-                item[field] = value; 
-                saveData(false);
-                if(field === 'date') { window.renderChecklists(); window.updateDropdownDdayList(); window.renderSchedule(); }
-                if(field === 'notes') { window.renderBudget(); }
-                if(field === 'price' && window.renderStatistics) window.renderStatistics();
-            }
-        };
-
         window.startEditTitle = (id) => {
             const titleEl = document.getElementById('title-' + id);
             if(!titleEl) return;
@@ -1916,6 +1852,17 @@
             });
             titleEl.replaceWith(input);
             input.focus(); input.select();
+        };
+
+        window.updateChecklistField = (id, field, value) => {
+            const item = appData.checklists.find(i => i.id === id);
+            if(item) { 
+                item[field] = value; 
+                saveData(false);
+                if(field === 'date') { window.renderChecklists(); window.updateDropdownDdayList(); window.renderSchedule(); }
+                if(field === 'notes') { window.renderBudget(); }
+                if(field === 'price' && window.renderStatistics) window.renderStatistics();
+            }
         };
 
         window.toggleBudgetPaid = (id, isPaid, isFromCL) => {
@@ -1955,10 +1902,7 @@
         const installBtn = document.getElementById('install-btn');
 
         if (window.location.protocol.startsWith('http')) {
-            const manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            manifestLink.href = 'manifest.json';
-            document.head.appendChild(manifestLink);
+            const ml = document.createElement('link'); ml.rel = 'manifest'; ml.href = 'manifest.json'; document.head.appendChild(ml);
         }
 
         if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
